@@ -5,7 +5,9 @@ import com.example.jasionowicz.User.LibraryUser;
 import com.example.jasionowicz.User.LibraryUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -125,15 +127,27 @@ public class BookService {
         return borrowedBooks;
     }
 
+//    public List<BookDTO> getAllByTitle(String title) {
+//        String formattedBookName = title.replace("-", " ");
+//        List<Book> allBooksByTitle = bookRepository.getAllByTitle(formattedBookName);
+//        List<BookDTO> borrowedBooks = new ArrayList<>();
+//        for (Book book : allBooksByTitle) {
+//            BookDTO bookDTO = convertBookToBookDTO(book);
+//            borrowedBooks.add(bookDTO);
+//        }
+//        return borrowedBooks;
+//    }
+
     public List<BookDTO> getAllByTitle(String title) {
-        List<Book> allBooksByTitle = bookRepository.getAllByTitle(title);
-        List<BookDTO> borrowedBooks = new ArrayList<>();
-        for (Book book : allBooksByTitle) {
-            BookDTO bookDTO = convertBookToBookDTO(book);
-            borrowedBooks.add(bookDTO);
+        String formattedBookName = title.replace("-", " ");
+        List<BookDTO> books = bookRepository.getAllByTitle(formattedBookName)
+                .stream()
+                .map(this::convertBookToBookDTO)
+                .collect(Collectors.toList());
+        if (books.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found with title: " + formattedBookName);
         }
-        return borrowedBooks;
+        return books;
+
     }
-
-
 }

@@ -79,11 +79,16 @@ public class BookController {
     public List<BookDTO> getMostBorrowedBooks() {
         return bookService.getMostBorrowedBooks();
     }
-    @GetMapping("/{name}/{surname}/getAll")
+    @GetMapping("/{name}-{surname}/getAll")
     public ResponseEntity<List<BookDTO>> getAllBooksByAuthor(@PathVariable String name, @PathVariable String surname) {
         String author = name + " " + surname;
        return ResponseEntity.ok().body(bookService.getAllByAuthor(author));
     }
 
+    @GetMapping("/{bookName}/getByTitle")
+    @ResponseBody
+    public ResponseEntity<List<BookDTO>> getAllBooksByName(@PathVariable String bookName) {
+        return ResponseEntity.ok().body(bookService.getAllByTitle(bookName));
+    }
 
 }
