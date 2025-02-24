@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteka</title>
+    <script>
+        async function fetchBooks() {
+            const response = await fetch("http://localhost:8080/books");
+            const books = await response.json();
+            const bookList = document.getElementById("book-list");
+            bookList.innerHTML = "";
+            books.forEach(book => {
+                bookList.innerHTML += `
+                    <li>${book.title} - ${book.author}
+                        (${book.isAvailable ? "Dostępna" : "Wypożyczona"})
+                        <button onclick="borrowBook(${book.id})">Wypożycz</button>
+                        <button onclick="returnBook(${book.id})">Zwróć</button>
+                    </li>`;
+            });
+        }
+
+        async function addBook() {
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            await fetch("http://localhost:8080/books", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, author, isAvailable: true })
+            });
+            fetchBooks();
+        }
+
+        async function borrowBook(bookId) {
+            const userId = prompt("Podaj ID użytkownika:");
+            if (userId) {
+                await fetch(`http://localhost:8080/books/borrow/${bookId}/${userId}`, { method: "POST" });
+                fetchBooks();
+            }
+        }
+
+        async function returnBook(bookId) {
+            await fetch(`http://localhost:8080/books/return/${bookId}`, { method: "POST" });
+            fetchBooks();
+        }
+
+        window.onload = fetchBooks;
+    </script>
+</head>
+<body>
+<h1>Biblioteka</h1>
+
+<h2>Dodaj nową książkę</h2>
+<input type="text" id="title" placeholder="Tytuł">
+<input type="text" id="author" placeholder="Autor">
+<button onclick="addBook()">Dodaj</button>
+
+<h2>Lista książek</h2>
+<ul id="book-list"></ul>
+</body>
+</html>

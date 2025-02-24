@@ -1,11 +1,12 @@
 package com.example.jasionowicz.Book;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/books")
 public class BookController {
 
@@ -15,7 +16,8 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
+    @ResponseBody
     public List<BookDTO> getAllBooks() {
         return bookService.getAllBooks()
                 .stream()
@@ -24,7 +26,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> getBook(@PathVariable long id) {
+    public ResponseEntity<BookDTO> getBook(@PathVariable Integer id) {
         try {
             Book book = bookService.getBook(id);
             return ResponseEntity.ok(bookService.convertBookToBookDTO(book));
@@ -33,7 +35,7 @@ public class BookController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     public ResponseEntity<BookDTO> addBook(@RequestBody BookDTO bookDTO) {
         Book book = bookService.convertBookDTOToBook(bookDTO);
         bookService.addBook(book);
@@ -41,20 +43,20 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable long id, @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Integer id, @RequestBody BookDTO bookDTO) {
         Book book = bookService.convertBookDTOToBook(bookDTO);
         bookService.updateBook(book);
         return ResponseEntity.ok(bookService.convertBookToBookDTO(book));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable long id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable Integer id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/borrow/{userId}")
-    public ResponseEntity<String> borrowBook(@PathVariable long id, @PathVariable long userId) {
+    public ResponseEntity<String> borrowBook(@PathVariable Integer id, @PathVariable Integer userId) {
         boolean success = bookService.borrowBook(id, userId);
         if (success) {
             return ResponseEntity.ok("Book borrowed successfully");
@@ -62,4 +64,26 @@ public class BookController {
             return ResponseEntity.badRequest().body("Book is unavailable or user not found");
         }
     }
+    @PutMapping("/{id}/return")
+    public ResponseEntity<String> returnBook(@PathVariable Integer id) {
+        try {
+            bookService.returnBook(id);
+            return ResponseEntity.ok("Book returned successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/stats")
+    @ResponseBody
+    public List<BookDTO> getMostBorrowedBooks() {
+        return bookService.getMostBorrowedBooks();
+    }
+    @GetMapping("/{name}/{surname}/getAll")
+    public ResponseEntity<List<BookDTO>> getAllBooksByAuthor(@PathVariable String name, @PathVariable String surname) {
+        String author = name + " " + surname;
+       return ResponseEntity.ok().body(bookService.getAllByAuthor(author));
+    }
+
+
 }
