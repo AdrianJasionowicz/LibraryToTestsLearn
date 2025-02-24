@@ -155,3 +155,527 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/Adria/O
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 61 more
+2025-02-19 16:21:14.933910+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "[*]ID"; oczekiwano "INSERT"
+Syntax error in SQL statement "[*]ID"; expected "INSERT"; SQL statement:
+ID [42001-232]
+2025-02-19 16:21:34.192914+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Błąd konwersji danych "'' (BOOK: ""BORROWED_BY_USER_ID"" BIGINT)"
+Data conversion error converting "'' (BOOK: ""BORROWED_BY_USER_ID"" BIGINT)"; SQL statement:
+INSERT INTO "PUBLIC"."BOOK"("BORROW_COUNT","IS_AVAILABLE","BORROWED_BY_USER_ID","ID","AUTHOR","TITLE")VALUES(?,?,?,?,?,?) [22018-232]
+2025-02-19 16:21:34.192914+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Błąd konwersji danych "'' (BOOK: ""BORROWED_BY_USER_ID"" BIGINT)"
+Data conversion error converting "'' (BOOK: ""BORROWED_BY_USER_ID"" BIGINT)"; SQL statement:
+INSERT INTO "PUBLIC"."BOOK"("BORROW_COUNT","IS_AVAILABLE","BORROWED_BY_USER_ID","ID","AUTHOR","TITLE")VALUES(?,?,?,?,?,?) [22018-232]
+2025-02-23 17:25:31.977227+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id)[*]"; oczekiwano "OVERRIDING USER VALUE, OVERRIDING SYSTEM VALUE, DIRECT, DEFAULT VALUES, VALUES, SET, WITH, (, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id)[*]"; expected "OVERRIDING USER VALUE, OVERRIDING SYSTEM VALUE, DIRECT, DEFAULT VALUES, VALUES, SET, WITH, (, SELECT, TABLE, VALUES"; SQL statement:
+INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) [42001-232]
+2025-02-23 17:25:31.986252+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL),[*]"; oczekiwano "ROW (, (, INTERSECTS (, NOT, EXISTS, UNIQUE, INTERSECTS"
+Syntax error in SQL statement "VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL),[*]"; expected "ROW (, (, INTERSECTS (, NOT, EXISTS, UNIQUE, INTERSECTS"; SQL statement:
+VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.987252+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.989252+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.989756+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.990762+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.991767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.992768+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.993770+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.993770+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.994767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.995767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.996767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.996767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.997767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.997767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.997767+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.999273+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.999273+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:31.999273+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.000278+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.000278+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.001283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.001283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.002283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.003283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.004283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.004283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.005283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.006283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.006283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.007283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.007283+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.008787+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.008787+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.009793+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.009793+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.010794+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Code', 'Charles Petzold', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Code', 'Charles Petzold', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Code', 'Charles Petzold', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.010794+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.011799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.011799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.011799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.012799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.013799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.013799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.014799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.015799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.015799+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.018798+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.018798+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.019946+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.019946+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.021128+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.021128+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.022129+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.022129+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.023129+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.024278+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.025555+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:25:32.025555+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL)"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL)"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL) [42001-232]
+2025-02-23 17:27:03.311858+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id)[*]"; oczekiwano "OVERRIDING USER VALUE, OVERRIDING SYSTEM VALUE, DIRECT, DEFAULT VALUES, VALUES, SET, WITH, (, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id)[*]"; expected "OVERRIDING USER VALUE, OVERRIDING SYSTEM VALUE, DIRECT, DEFAULT VALUES, VALUES, SET, WITH, (, SELECT, TABLE, VALUES"; SQL statement:
+INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) [42001-232]
+2025-02-23 17:27:03.316891+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL),[*]"; oczekiwano "ROW (, (, INTERSECTS (, NOT, EXISTS, UNIQUE, INTERSECTS"
+Syntax error in SQL statement "VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL),[*]"; expected "ROW (, (, INTERSECTS (, NOT, EXISTS, UNIQUE, INTERSECTS"; SQL statement:
+VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.318304+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.320329+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.320329+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.320329+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.322249+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.323343+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.324374+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.324374+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.325694+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.325694+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.326992+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.326992+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.328003+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.328003+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.329003+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.329003+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.330003+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.330509+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.330509+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.331515+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.331515+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.331515+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.332749+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.333750+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.333750+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.334857+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.334857+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.335865+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.335865+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.336863+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.337874+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.337874+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.338916+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.338916+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.338916+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.340424+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Code', 'Charles Petzold', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Code', 'Charles Petzold', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Code', 'Charles Petzold', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.340424+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.341869+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.341869+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.342868+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.343868+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.343868+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.345056+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.345056+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.346150+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.346150+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.347260+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.347260+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.348261+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.349260+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.349260+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.350259+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.350763+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.350763+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.350763+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.352286+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.352286+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL),"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL),"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL), [42001-232]
+2025-02-23 17:27:03.353480+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "([*]'The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL)"; oczekiwano "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL)"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL) [42001-232]
+2025-02-23 17:28:25.208729+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "BOOK" nie istnieje
+Table "BOOK" not found; SQL statement:
+INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL), ('Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL), ('Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL), ('Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL), ('Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL), ('Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL), ('Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL), ('Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL), ('Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL), ('Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL), ('Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL), ('Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL), ('Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL), ('The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL), ('You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL), ('JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL), ('Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL), ('The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL), ('Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL), ('Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL), ('Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL), ('Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL), ('Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL), ('Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL), ('Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL), ('Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL), ('Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL), ('Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL), ('Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL), ('Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL), ('Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL), ('Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL), ('Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL), ('Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL), ('Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL), ('Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL), ('Code', 'Charles Petzold', TRUE, NULL, 0, NULL), ('The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL), ('How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL), ('Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL), ('Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL), ('Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL), ('The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL), ('The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL), ('Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL), ('An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL), ('Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL), ('The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL), ('Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL), ('Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL), ('Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL), ('The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL), ('Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL), ('Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL), ('Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL), ('Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL), ('The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL) [42102-232]
+2025-02-23 17:28:39.583290+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "BOOK" nie istnieje
+Table "BOOK" not found; SQL statement:
+INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL), ('Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL), ('Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL), ('Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL), ('Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL), ('Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL), ('Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL), ('Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL), ('Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL), ('Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL), ('Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL), ('Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL), ('Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL), ('The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL), ('You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL), ('JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL), ('Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL), ('The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL), ('Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL), ('Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL), ('Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL), ('Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL), ('Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL), ('Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL), ('Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL), ('Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL), ('Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL), ('Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL), ('Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL), ('Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL), ('Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL), ('Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL), ('Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL), ('Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL), ('Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL), ('Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL), ('Code', 'Charles Petzold', TRUE, NULL, 0, NULL), ('The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL), ('How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL), ('Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL), ('Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL), ('Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL), ('The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL), ('The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL), ('Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL), ('An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL), ('Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL), ('The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL), ('Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL), ('Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL), ('Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL), ('The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL), ('Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL), ('Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL), ('Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL), ('Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL), ('The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL) [42102-232]
+2025-02-23 17:28:39.766409+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "BOOK" nie istnieje
+Table "BOOK" not found; SQL statement:
+INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL), ('Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL), ('Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL), ('Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL), ('Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL), ('Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL), ('Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL), ('Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL), ('Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL), ('Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL), ('Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL), ('Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL), ('Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL), ('The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL), ('You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL), ('JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL), ('Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL), ('The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL), ('Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL), ('Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL), ('Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL), ('Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL), ('Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL), ('Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL), ('Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL), ('Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL), ('Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL), ('Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL), ('Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL), ('Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL), ('Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL), ('Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL), ('Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL), ('Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL), ('Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL), ('Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL), ('Code', 'Charles Petzold', TRUE, NULL, 0, NULL), ('The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL), ('How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL), ('Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL), ('Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL), ('Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL), ('The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL), ('The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL), ('Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL), ('An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL), ('Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL), ('The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL), ('Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL), ('Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL), ('Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL), ('The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL), ('Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL), ('Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL), ('Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL), ('Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL), ('The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL) [42102-232]
+2025-02-23 17:29:00.226574+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "BOOK" nie istnieje
+Table "BOOK" not found; SQL statement:
+INSERT INTO book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL), ('Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL), ('Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL), ('Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL), ('Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL), ('Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL), ('Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL), ('Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL), ('Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL), ('Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL), ('Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL), ('Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL), ('Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL), ('The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL), ('You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL), ('JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL), ('Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL), ('The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL), ('Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL), ('Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL), ('Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL), ('Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL), ('Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL), ('Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL), ('Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL), ('Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL), ('Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL), ('Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL), ('Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL), ('Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL), ('Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL), ('Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL), ('Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL), ('Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL), ('Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL), ('Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL), ('Code', 'Charles Petzold', TRUE, NULL, 0, NULL), ('The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL), ('How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL), ('Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL), ('Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL), ('Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL), ('The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL), ('The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL), ('Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL), ('An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL), ('Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL), ('The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL), ('Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL), ('Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL), ('Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL), ('The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL), ('Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL), ('Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL), ('Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL), ('Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL), ('The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL) [42102-232]
+2025-02-23 17:29:18.553736+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "BOOK" nie istnieje
+Table "BOOK" not found; SQL statement:
+INSERT INTO Book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) VALUES ('Spring Boot in Action', 'Craig Walls', TRUE, NULL, 0, NULL), ('Effective Java', 'Joshua Bloch', TRUE, NULL, 0, NULL), ('Clean Code', 'Robert C. Martin', TRUE, NULL, 0, NULL), ('Java Concurrency in Practice', 'Brian Goetz', TRUE, NULL, 0, NULL), ('Head First Java', 'Kathy Sierra', TRUE, NULL, 0, NULL), ('Design Patterns', 'Erich Gamma', TRUE, NULL, 0, NULL), ('Refactoring', 'Martin Fowler', TRUE, NULL, 0, NULL), ('Microservices Patterns', 'Chris Richardson', TRUE, NULL, 0, NULL), ('Java: The Complete Reference', 'Herbert Schildt', TRUE, NULL, 0, NULL), ('Thinking in Java', 'Bruce Eckel', TRUE, NULL, 0, NULL), ('Python Crash Course', 'Eric Matthes', TRUE, NULL, 0, NULL), ('Automate the Boring Stuff with Python', 'Al Sweigart', TRUE, NULL, 0, NULL), ('Fluent Python', 'Luciano Ramalho', TRUE, NULL, 0, NULL), ('The Pragmatic Programmer', 'Andrew Hunt', TRUE, NULL, 0, NULL), ('You Don’t Know JS', 'Kyle Simpson', TRUE, NULL, 0, NULL), ('JavaScript: The Good Parts', 'Douglas Crockford', TRUE, NULL, 0, NULL), ('Eloquent JavaScript', 'Marijn Haverbeke', TRUE, NULL, 0, NULL), ('The Mythical Man-Month', 'Frederick P. Brooks Jr.', TRUE, NULL, 0, NULL), ('Code Complete', 'Steve McConnell', TRUE, NULL, 0, NULL), ('Deep Work', 'Cal Newport', TRUE, NULL, 0, NULL), ('Soft Skills', 'John Sonmez', TRUE, NULL, 0, NULL), ('Algorithms', 'Robert Sedgewick', TRUE, NULL, 0, NULL), ('Introduction to the Theory of Computation', 'Michael Sipser', TRUE, NULL, 0, NULL), ('Data Structures and Algorithm Analysis', 'Mark Allen Weiss', TRUE, NULL, 0, NULL), ('Database Systems', 'Thomas Connolly', TRUE, NULL, 0, NULL), ('Operating System Concepts', 'Abraham Silberschatz', TRUE, NULL, 0, NULL), ('Computer Networks', 'Andrew S. Tanenbaum', TRUE, NULL, 0, NULL), ('Cybersecurity and Cyberwar', 'P.W. Singer', TRUE, NULL, 0, NULL), ('Cryptography and Network Security', 'William Stallings', TRUE, NULL, 0, NULL), ('Artificial Intelligence: A Modern Approach', 'Stuart Russell', TRUE, NULL, 0, NULL), ('Machine Learning', 'Tom M. Mitchell', TRUE, NULL, 0, NULL), ('Deep Learning', 'Ian Goodfellow', TRUE, NULL, 0, NULL), ('Pattern Recognition and Machine Learning', 'Christopher Bishop', TRUE, NULL, 0, NULL), ('Computer Vision: Algorithms and Applications', 'Richard Szeliski', TRUE, NULL, 0, NULL), ('Reinforcement Learning', 'Richard S. Sutton', TRUE, NULL, 0, NULL), ('Programming Pearls', 'Jon Bentley', TRUE, NULL, 0, NULL), ('Code', 'Charles Petzold', TRUE, NULL, 0, NULL), ('The Art of Computer Programming', 'Donald Knuth', TRUE, NULL, 0, NULL), ('How to Solve It', 'G. Polya', TRUE, NULL, 0, NULL), ('Structure and Interpretation of Computer Programs', 'Harold Abelson', TRUE, NULL, 0, NULL), ('Domain-Driven Design', 'Eric Evans', TRUE, NULL, 0, NULL), ('Software Architecture in Practice', 'Len Bass', TRUE, NULL, 0, NULL), ('The Phoenix Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Site Reliability Engineering', 'Betsy Beyer', TRUE, NULL, 0, NULL), ('The Unicorn Project', 'Gene Kim', TRUE, NULL, 0, NULL), ('Working Effectively with Legacy Code', 'Michael Feathers', TRUE, NULL, 0, NULL), ('Continuous Delivery', 'Jez Humble', TRUE, NULL, 0, NULL), ('An Elegant Puzzle', 'Will Larson', TRUE, NULL, 0, NULL), ('Managing Humans', 'Michael Lopp', TRUE, NULL, 0, NULL), ('The Effective Engineer', 'Edmond Lau', TRUE, NULL, 0, NULL), ('Accelerate', 'Nicole Forsgren', TRUE, NULL, 0, NULL), ('Release It!', 'Michael Nygard', TRUE, NULL, 0, NULL), ('Production-Ready Microservices', 'Susan Fowler', TRUE, NULL, 0, NULL), ('The DevOps Handbook', 'Gene Kim', TRUE, NULL, 0, NULL), ('Security Engineering', 'Ross Anderson', TRUE, NULL, 0, NULL), ('Hacking: The Art of Exploitation', 'Jon Erickson', TRUE, NULL, 0, NULL), ('Compilers: Principles, Techniques, and Tools', 'Alfred V. Aho', TRUE, NULL, 0, NULL), ('Web Application Security', 'Andrew Hoffman', TRUE, NULL, 0, NULL), ('The Cathedral and the Bazaar', 'Eric S. Raymond', TRUE, NULL, 0, NULL) [42102-232]
+2025-02-23 19:25:24.267527+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "BOOK" nie istnieje
+Table "BOOK" not found; SQL statement:
+INSERT INTO Book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) WHERE NOT EXISTS (SELECT * FROM borrow_history WHERE user_id = 1 AND book_id = 2) [42102-232]
+2025-02-23 19:25:56.190640+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabela "BOOK" nie istnieje
+Table "BOOK" not found; SQL statement:
+INSERT INTO Book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) WHERE NOT EXISTS (SELECT * FROM borrow_history WHERE user_id = 1 AND book_id = 2) [42102-232]
+2025-02-23 19:26:48.142655+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Błąd składniowy w wyrażeniu SQL "INSERT INTO Book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) [*]WHERE NOT EXISTS (SELECT * FROM borrow_history WHERE user_id = 1 AND book_id = 2)"; oczekiwano "OVERRIDING USER VALUE, OVERRIDING SYSTEM VALUE, DIRECT, DEFAULT VALUES, VALUES, SET, WITH, (, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "INSERT INTO Book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) [*]WHERE NOT EXISTS (SELECT * FROM borrow_history WHERE user_id = 1 AND book_id = 2)"; expected "OVERRIDING USER VALUE, OVERRIDING SYSTEM VALUE, DIRECT, DEFAULT VALUES, VALUES, SET, WITH, (, SELECT, TABLE, VALUES"; SQL statement:
+INSERT INTO Book (title, author, is_available, borrowed_by_user_id, borrow_count, library_user_id) WHERE NOT EXISTS (SELECT * FROM borrow_history WHERE user_id = 1 AND book_id = 2) [42001-232]

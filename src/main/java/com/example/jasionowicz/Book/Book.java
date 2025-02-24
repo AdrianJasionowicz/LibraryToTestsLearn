@@ -1,10 +1,13 @@
 package com.example.jasionowicz.Book;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.jasionowicz.User.LibraryUser;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.*;
+import org.apache.catalina.User;
+
+import java.sql.Time;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,11 +19,17 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String title;
     private String author;
     private Boolean isAvailable;
-    private Long borrowedByUserId;
+    @Column(name = "borrowed_by_user_id")
+    private Integer borrowedByUserId;
+    private int borrowCount = 0;
+    @ManyToOne
+    private LibraryUser libraryUser;
+
+
 
     public boolean isAvailable() {
 
@@ -28,6 +37,10 @@ public class Book {
             return true;
         }
         return isAvailable;
+    }
+
+    public void increaseBorrowCount() {
+        this.borrowCount++;
     }
 
 }
