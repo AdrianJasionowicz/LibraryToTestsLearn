@@ -8,15 +8,22 @@
 </head>
 <body class="bg-gray-100 text-gray-900">
 <div class="container mx-auto p-6">
-    <h1 class="text-4xl font-bold text-center my-4">📚 Biblioteka</h1>
+    <!-- Nawigacja -->
+    <div class="flex justify-between mb-6">
+        <h1 class="text-4xl font-bold">📚 Biblioteka</h1>
+        <div>
+            <a href="Login" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Logowanie</a>
+            <a href="Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
+        </div>
+    </div>
 
-    <!-- Formularz dodawania książki -->
+    <!-- Wyszukiwanie książek -->
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-4">Dodaj nową książkę</h2>
+        <h2 class="text-2xl font-semibold mb-4">Wyszukaj książkę</h2>
         <div class="flex gap-4">
-            <input type="text" id="title" placeholder="Tytuł" class="border p-2 rounded w-1/3">
-            <input type="text" id="author" placeholder="Autor" class="border p-2 rounded w-1/3">
-            <button onclick="addBook()" class="bg-blue-500 text-white px-4 py-2 rounded">Dodaj</button>
+            <input type="text" id="searchQuery" placeholder="Wpisz tytuł lub autora" class="border p-2 rounded w-2/3">
+            <button onclick="fetchBooks('title')" class="bg-blue-500 text-white px-4 py-2 rounded">Szukaj po tytule</button>
+            <button onclick="fetchBooks('author')" class="bg-green-500 text-white px-4 py-2 rounded">Szukaj po autorze</button>
         </div>
     </div>
 
@@ -28,59 +35,38 @@
 </div>
 
 <script>
-    // Pobieranie listy książek
-    async function fetchBooks() {
-        const response = await fetch("http://localhost:8080/books/getAll");
+    async function fetchBooks(filterType = '') {
+        const query = document.getElementById("searchQuery").value.trim();
+        let url = "http://localhost:8080/books/getAll";
+
+        if (query && filterType === 'title') {
+            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByTitle`;
+        } else if (query && filterType === 'author') {
+            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getAll`;
+        }
+
+        const response = await fetch(url);
         const books = await response.json();
         const bookList = document.getElementById("book-list");
         bookList.innerHTML = "";
 
         books.forEach(book => {
             bookList.innerHTML += `
-                    <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
-                        <span class="text-lg">${book.title} - ${book.author}
-                        (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
-                        <div>
-                            <button onclick="borrowBook(${book.id})"
-                                class="bg-yellow-500 text-white px-4 py-2 rounded mr-2">
-                                Wypożycz
-                            </button>
-                            <button onclick="returnBook(${book.id})"
-                                class="bg-green-500 text-white px-4 py-2 rounded">
-                                Zwróć
-                            </button>
-                        </div>
-                    </li>`;
+                <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                    <span class="text-lg">${book.title} - ${book.author}
+                    (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
+                    <div>
+                        <button onclick="borrowBook(${book.id})"
+                            class="bg-yellow-500 text-white px-4 py-2 rounded mr-2">
+                            Wypożycz
+                        </button>
+                        <button onclick="returnBook(${book.id})"
+                            class="bg-green-500 text-white px-4 py-2 rounded">
+                            Zwróć
+                        </button>
+                    </div>
+                </li>`;
         });
-    }
-
-    // Dodawanie nowej książki
-    async function addBook() {
-        const title = document.getElementById("title").value;
-        const author = document.getElementById("author").value;
-
-        await fetch("http://localhost:8080/books", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, author, isAvailable: true })
-        });
-
-        fetchBooks();
-    }
-
-    // Wypożyczenie książki
-    async function borrowBook(bookId) {
-        const userId = prompt("Podaj ID użytkownika:");
-        if (userId) {
-            await fetch(`http://localhost:8080/books/${bookId}/borrow/${userId}`, { method: "PUT" });
-            fetchBooks();
-        }
-    }
-
-    // Zwrócenie książki
-    async function returnBook(bookId) {
-        await fetch(`http://localhost:8080/books/${bookId}/return`, { method: "PUT" });
-        fetchBooks();
     }
 
     window.onload = fetchBooks;

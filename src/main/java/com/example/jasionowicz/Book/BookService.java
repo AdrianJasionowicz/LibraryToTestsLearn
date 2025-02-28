@@ -139,13 +139,12 @@ public class BookService {
 //    }
 
     public List<BookDTO> getAllByTitle(String title) {
-        String formattedBookName = title.replace("-", " ");
-        List<BookDTO> books = bookRepository.getAllByTitle(formattedBookName)
+        List<BookDTO> books = bookRepository.getAllByTitle(title)
                 .stream()
                 .map(this::convertBookToBookDTO)
                 .collect(Collectors.toList());
         if (books.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found with title: " + formattedBookName);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found with title: " + title);
         }
         return books;
 

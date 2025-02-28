@@ -1,6 +1,7 @@
 package com.example.jasionowicz.User;
 
 import com.example.jasionowicz.Book.Book;
+import com.example.jasionowicz.Config.LoginBase.LoginUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,8 @@ public class LibraryUser {
     private int accountBalance = 0;
     @OneToMany
     private List<Book> borrowedBooks;
+    @OneToOne
+    private LoginUser loginUser;
 
 
 
