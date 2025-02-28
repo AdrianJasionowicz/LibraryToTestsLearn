@@ -50,20 +50,20 @@ public class BookService {
     }
 
     @Transactional
-    public boolean borrowBook(Integer bookId, Integer userId) {
-        Book book = getBook(bookId);
-        LibraryUser user = libraryUserRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public void borrowBook(Integer bookId, LibraryUser libraryUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono książki"));
 
-        if (book != null && user != null && book.isAvailable()) {
-            book.setIsAvailable(false);
-            book.setBorrowedByUserId(userId);
-            book.increaseBorrowCount();
-            bookRepository.save(book);
-            borrowHistoryService.recordNewBorrow(bookId, userId);
-            return true;
+        if (!book.isAvailable()) {
+            throw new RuntimeException("Książka jest już wypożyczona!");
         }
-        return false;
+
+        book.setIsAvailable(false);
+        book.setLibraryUser(libraryUser);
+        book.setBorrowedByUserId(libraryUser.getId());
+        bookRepository.save(book);
     }
+
 
     @Transactional
     public boolean returnBook(Integer bookId) {
@@ -127,16 +127,7 @@ public class BookService {
         return borrowedBooks;
     }
 
-//    public List<BookDTO> getAllByTitle(String title) {
-//        String formattedBookName = title.replace("-", " ");
-//        List<Book> allBooksByTitle = bookRepository.getAllByTitle(formattedBookName);
-//        List<BookDTO> borrowedBooks = new ArrayList<>();
-//        for (Book book : allBooksByTitle) {
-//            BookDTO bookDTO = convertBookToBookDTO(book);
-//            borrowedBooks.add(bookDTO);
-//        }
-//        return borrowedBooks;
-//    }
+
 
     public List<BookDTO> getAllByTitle(String title) {
         List<BookDTO> books = bookRepository.getAllByTitle(title)

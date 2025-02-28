@@ -1,6 +1,8 @@
 package com.example.jasionowicz.Book;
 
 import com.example.jasionowicz.User.LibraryUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Null;
 import lombok.*;
@@ -27,6 +29,7 @@ public class Book {
     private Integer borrowedByUserId;
     private int borrowCount = 0;
     @ManyToOne
+    @JsonIgnore
     private LibraryUser libraryUser;
 
 

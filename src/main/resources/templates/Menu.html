@@ -3,73 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteka</title>
+    <title>📚 Biblioteka</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
+
 <div class="container mx-auto p-6">
     <!-- Nawigacja -->
     <div class="flex justify-between mb-6">
         <h1 class="text-4xl font-bold">📚 Biblioteka</h1>
-        <div>
-            <a href="Login" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Logowanie</a>
-            <a href="Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
+        <div id="auth-buttons">
+            <a href="/Login" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">Logowanie</a>
+            <a href="/Register" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">Rejestracja</a>
         </div>
     </div>
 
     <!-- Wyszukiwanie książek -->
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-4">Wyszukaj książkę</h2>
+        <h2 class="text-2xl font-semibold mb-4">🔍 Wyszukaj książkę</h2>
         <div class="flex gap-4">
             <input type="text" id="searchQuery" placeholder="Wpisz tytuł lub autora" class="border p-2 rounded w-2/3">
-            <button onclick="fetchBooks('title')" class="bg-blue-500 text-white px-4 py-2 rounded">Szukaj po tytule</button>
-            <button onclick="fetchBooks('author')" class="bg-green-500 text-white px-4 py-2 rounded">Szukaj po autorze</button>
+            <button onclick="fetchBooks('title')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">Szukaj po tytule</button>
+            <button onclick="fetchBooks('author')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">Szukaj po autorze</button>
         </div>
     </div>
 
+    <!-- Komunikat o błędzie -->
+    <p id="error-message" class="text-red-500 text-center mt-4 hidden"></p>
+
     <!-- Lista książek -->
     <div class="mt-6">
-        <h2 class="text-2xl font-semibold mb-4">Lista książek</h2>
+        <h2 class="text-2xl font-semibold mb-4">📖 Lista książek</h2>
         <ul id="book-list" class="space-y-4"></ul>
     </div>
 </div>
 
 <script>
     async function fetchBooks(filterType = '') {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.error("Brak tokena! Użytkownik nie jest zalogowany.");
+            document.getElementById("error-message").innerText = "Musisz się zalogować, aby zobaczyć książki.";
+            document.getElementById("error-message").classList.remove("hidden");
+            return;
+        }
+
         const query = document.getElementById("searchQuery").value.trim();
         let url = "http://localhost:8080/books/getAll";
 
         if (query && filterType === 'title') {
             url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByTitle`;
         } else if (query && filterType === 'author') {
-            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getAll`;
+            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByAuthor`;
         }
 
-        const response = await fetch(url);
-        const books = await response.json();
-        const bookList = document.getElementById("book-list");
-        bookList.innerHTML = "";
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
 
-        books.forEach(book => {
-            bookList.innerHTML += `
+            if (!response.ok) throw new Error("Błąd pobierania danych!");
+
+            const books = await response.json();
+            const bookList = document.getElementById("book-list");
+            bookList.innerHTML = "";
+
+            books.forEach(book => {
+                bookList.innerHTML += `
                 <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
                     <span class="text-lg">${book.title} - ${book.author}
                     (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
                     <div>
                         <button onclick="borrowBook(${book.id})"
-                            class="bg-yellow-500 text-white px-4 py-2 rounded mr-2">
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition ${book.isAvailable ? "" : "opacity-50 cursor-not-allowed"}"
+                            ${book.isAvailable ? "" : "disabled"}>
                             Wypożycz
                         </button>
                         <button onclick="returnBook(${book.id})"
-                            class="bg-green-500 text-white px-4 py-2 rounded">
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition ${book.isAvailable ? "opacity-50 cursor-not-allowed" : ""}"
+                            ${book.isAvailable ? "disabled" : ""}>
                             Zwróć
                         </button>
                     </div>
                 </li>`;
-        });
+            });
+
+        } catch (error) {
+            console.error("Wystąpił błąd:", error);
+            document.getElementById("error-message").innerText = "Nie udało się załadować książek.";
+            document.getElementById("error-message").classList.remove("hidden");
+        }
     }
 
-    window.onload = fetchBooks;
+    async function borrowBook(bookId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz być zalogowany, aby wypożyczyć książkę!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/books/${bookId}/borrow`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) throw new Error("Nie udało się wypożyczyć książki!");
+
+            alert("✅ Książka wypożyczona!");
+            fetchBooks(); // Odśwież listę książek
+
+        } catch (error) {
+            console.error(error);
+            alert("❌ Błąd: " + error.message);
+        }
+    }
+
+    async function returnBook(bookId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz być zalogowany, aby zwrócić książkę!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/books/${bookId}/return`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) throw new Error("Nie udało się zwrócić książki!");
+
+            alert("✅ Książka zwrócona!");
+            fetchBooks();  // Odśwież listę książek
+
+        } catch (error) {
+            console.error(error);
+            alert("❌ Błąd: " + error.message);
+        }
+    }
+
+    function logoutUser() {
+        localStorage.removeItem("token");
+        window.location.href = "/Login";
+    }
+
+    window.onload = function() {
+        const token = localStorage.getItem("token");
+        if (token) {
+            document.getElementById("auth-buttons").innerHTML = `
+            <button onclick="logoutUser()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition">Wyloguj</button>
+        `;
+        }
+        fetchBooks();
+    };
 </script>
+
 </body>
 </html>

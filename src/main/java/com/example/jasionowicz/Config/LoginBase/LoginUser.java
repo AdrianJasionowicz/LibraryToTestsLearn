@@ -17,6 +17,7 @@ public class LoginUser {
     @Column(unique = true)
     private String username;
     private String password;
-    @OneToOne
+    @OneToOne(mappedBy = "loginUser", cascade = CascadeType.ALL)
     private LibraryUser libraryUser;
+
 }

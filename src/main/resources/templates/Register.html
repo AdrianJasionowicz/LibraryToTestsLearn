@@ -31,7 +31,7 @@
     </button>
 
     <p class="text-center text-sm text-gray-600 mt-4">
-        Masz już konto? <a href="Login.html" class="text-blue-500">Zaloguj się</a>
+        Masz już konto? <a href="/Login" class="text-blue-500">Zaloguj się</a>
     </p>
 
     <p id="errorMessage" class="text-red-500 text-center mt-3 hidden"></p>
@@ -72,7 +72,7 @@
             if (response.ok) {
                 successMessage.innerText = "Rejestracja udana! Możesz się zalogować.";
                 successMessage.classList.remove("hidden");
-                setTimeout(() => window.location.href = "Login.html", 2000);
+                setTimeout(() => window.location.href = "/Login", 2000);
             } else {
                 const errorData = await response.json();
                 errorMessage.innerText = errorData.message || "Błąd rejestracji! Użytkownik może już istnieć.";

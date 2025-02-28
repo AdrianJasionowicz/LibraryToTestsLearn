@@ -2,6 +2,8 @@ package com.example.jasionowicz.User;
 
 import com.example.jasionowicz.Book.BookDTO;
 import com.example.jasionowicz.Book.BookService;
+import com.example.jasionowicz.Config.LoginBase.LoginUser;
+import com.example.jasionowicz.Config.LoginBase.LoginUserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,12 +12,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class LibraryUserService {
+    private final LoginUserRepository loginUserRepository;
     private LibraryUserRepository libraryUserRepository;
     private final BookService bookService;
 
-    public LibraryUserService(LibraryUserRepository libraryUserRepository, BookService bookService) {
+    public LibraryUserService(LibraryUserRepository libraryUserRepository, BookService bookService, LoginUserRepository loginUserRepository) {
         this.libraryUserRepository = libraryUserRepository;
         this.bookService = bookService;
+        this.loginUserRepository = loginUserRepository;
     }
 
     public LibraryUser save(LibraryUser libraryUser) {
@@ -84,6 +88,7 @@ public class LibraryUserService {
         libraryUserRepository.save(libraryUser);
         ///  WTF XDDDDDDDDDDD
     }
+
 
 
 }

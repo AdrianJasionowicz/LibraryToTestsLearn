@@ -2,6 +2,8 @@ package com.example.jasionowicz.User;
 
 import com.example.jasionowicz.Book.Book;
 import com.example.jasionowicz.Config.LoginBase.LoginUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +26,11 @@ public class LibraryUser {
     private int accountBalance = 0;
     @OneToMany
     private List<Book> borrowedBooks;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @JoinColumn(name = "login_user_id")
     private LoginUser loginUser;
+
 
 
 
