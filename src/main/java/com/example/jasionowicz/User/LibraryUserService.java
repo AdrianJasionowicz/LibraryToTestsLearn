@@ -4,6 +4,7 @@ import com.example.jasionowicz.Book.BookDTO;
 import com.example.jasionowicz.Book.BookService;
 import com.example.jasionowicz.Config.LoginBase.LoginUser;
 import com.example.jasionowicz.Config.LoginBase.LoginUserRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class LibraryUserService {
     private LibraryUserRepository libraryUserRepository;
     private final BookService bookService;
 
-    public LibraryUserService(LibraryUserRepository libraryUserRepository, BookService bookService, LoginUserRepository loginUserRepository) {
+    public LibraryUserService(LibraryUserRepository libraryUserRepository, @Lazy BookService bookService, LoginUserRepository loginUserRepository) {
         this.libraryUserRepository = libraryUserRepository;
         this.bookService = bookService;
         this.loginUserRepository = loginUserRepository;

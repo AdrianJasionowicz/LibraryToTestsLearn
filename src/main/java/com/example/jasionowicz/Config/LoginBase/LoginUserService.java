@@ -66,6 +66,7 @@ public class LoginUserService {
         LoginUserDTO loginUserDTO = new LoginUserDTO();
         loginUserDTO.setUsername(loginUser.getUsername());
         loginUserDTO.setPassword(loginUser.getPassword());
+        loginUserDTO.setLibraryUser(loginUser.getLibraryUser());
         return loginUserDTO;
     }
 
@@ -76,6 +77,9 @@ public class LoginUserService {
         loginUserRepository.save(loginUser);
     }
 
+    public LoginUserDTO getLoginUserIdByUsername(String username) {
+      return  converLoginUserToDTO(loginUserRepository.findByUsername(username).orElseThrow());
+    }
 
 
 }

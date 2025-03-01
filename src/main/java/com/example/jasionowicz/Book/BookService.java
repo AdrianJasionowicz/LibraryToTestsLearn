@@ -1,6 +1,8 @@
 package com.example.jasionowicz.Book;
 
 import com.example.jasionowicz.BorrowHistory.BorrowHistoryService;
+import com.example.jasionowicz.Config.LoginBase.LoginUserDTO;
+import com.example.jasionowicz.Config.LoginBase.LoginUserService;
 import com.example.jasionowicz.User.LibraryUser;
 import com.example.jasionowicz.User.LibraryUserRepository;
 import jakarta.transaction.Transactional;
@@ -12,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,10 +25,12 @@ public class BookService {
     private LibraryUserRepository libraryUserRepository;
     @Autowired
     private BorrowHistoryService borrowHistoryService;
+    private LoginUserService loginUserService;
 
-    public BookService(BookRepository bookRepository, LibraryUserRepository libraryUserRepository) {
+    public BookService(BookRepository bookRepository, LibraryUserRepository libraryUserRepository, LoginUserService loginUserService) {
         this.bookRepository = bookRepository;
         this.libraryUserRepository = libraryUserRepository;
+        this.loginUserService = loginUserService;
     }
 
     @Transactional
@@ -66,9 +71,25 @@ public class BookService {
 
 
     @Transactional
-    public boolean returnBook(Integer bookId) {
+    public boolean returnBook(Integer bookId, String username) {
         Book book = getBook(bookId);
+
+        if (book.isAvailable()) {
+            throw new RuntimeException("Ta książka nie jest wypożyczona!");
+        }
+
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+        if (loginUserDTO == null || loginUserDTO.getLibraryUser() == null) {
+            throw new RuntimeException("Użytkownik nie został znaleziony lub nie ma powiązanego LibraryUser");
+        }
         Integer userId = book.getBorrowedByUserId();
+        if (userId == null) {
+            throw new RuntimeException("Brak informacji o użytkowniku, który wypożyczył książkę!");
+        }
+
+        if (!Objects.equals(loginUserDTO.getLibraryUser().getId(), userId)) {
+            throw new RuntimeException("Nie masz uprawnień do zwrotu tej książki!");
+        }
 
         book.setIsAvailable(true);
         book.setBorrowedByUserId(null);
@@ -126,7 +147,6 @@ public class BookService {
         }
         return borrowedBooks;
     }
-
 
 
     public List<BookDTO> getAllByTitle(String title) {

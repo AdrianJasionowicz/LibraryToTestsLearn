@@ -84,13 +84,22 @@
 
 
     @PutMapping("/{id}/return")
-        public ResponseEntity<String> returnBook(@PathVariable Integer id) {
-            try {
-                bookService.returnBook(id);
-                return ResponseEntity.ok("Book returned successfully");
-            } catch (RuntimeException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
+        public ResponseEntity<String> returnBook(@PathVariable Integer id,@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Brak autoryzacji");
+        }
+        String username = userDetails.getUsername();
+        try {
+            boolean success = bookService.returnBook(id, username);
+            if (success) {
+                return ResponseEntity.ok("Książka została zwrócona!");
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Nie masz uprawnień do zwrotu tej książki!");
             }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
         }
 
         @GetMapping("/stats")
