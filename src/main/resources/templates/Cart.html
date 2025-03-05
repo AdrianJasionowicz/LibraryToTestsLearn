@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Koszyk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+<div class="container mx-auto p-6">
+    <h1 class="text-4xl font-bold">🛒 Twój koszyk</h1>
+    <ul id="cart-list" class="space-y-4 mt-6"></ul>
+    <button onclick="placeOrder()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition mt-4 w-full">✅ Zamów</button>
+</div>
+
+<script>
+    async function fetchCart() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz się zalogować!");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8080/cart/get", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("Nie udało się pobrać koszyka!");
+
+            const books = await response.json();
+            const cartList = document.getElementById("cart-list");
+            cartList.innerHTML = books.map(book =>
+                `<li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                    <span class="text-lg">${book.title} - ${book.author}</span>
+                    <button onclick="removeFromCart(${book.id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition">❌ Usuń</button>
+                </li>`
+            ).join('');
+
+        } catch (error) {
+            console.error(error);
+            alert("Błąd podczas pobierania koszyka!");
+        }
+    }
+
+    async function placeOrder() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz być zalogowany!");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8080/cart/order", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+            });
+
+            if (!response.ok) throw new Error("Nie udało się złożyć zamówienia!");
+
+            alert("✅ Zamówienie złożone!");
+            fetchCart(); // Odśwież koszyk
+
+        } catch (error) {
+            console.error(error);
+            alert("Błąd podczas składania zamówienia!");
+        }
+    }
+
+    async function removeFromCart(bookId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz się zalogować!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/cart/remove/${bookId}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("Nie udało się usunąć książki!");
+
+            fetchCart(); // Odśwież koszyk
+
+        } catch (error) {
+            console.error(error);
+            alert("Błąd podczas usuwania książki!");
+        }
+    }
+
+    window.onload = fetchCart;
+</script>
+
+</body>
+</html>

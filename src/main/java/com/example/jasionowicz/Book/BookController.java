@@ -19,8 +19,8 @@
     public class BookController {
 
         private final BookService bookService;
-        private LoginUserRepository loginUserRepository;
-        private LibraryUserRepository libraryUserRepository;
+        private final LoginUserRepository loginUserRepository;
+        private final LibraryUserRepository libraryUserRepository;
 
         public BookController(BookService bookService, LoginUserRepository loginUserRepository, LibraryUserRepository libraryUserRepository) {
             this.bookService = bookService;

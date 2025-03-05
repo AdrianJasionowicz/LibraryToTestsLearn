@@ -19,5 +19,6 @@ public class LoginUser {
     private String password;
     @OneToOne(mappedBy = "loginUser", cascade = CascadeType.ALL)
     private LibraryUser libraryUser;
-
+    @Enumerated(EnumType.STRING)
+    private LoginUserRole role;
 }

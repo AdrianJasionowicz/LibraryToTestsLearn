@@ -42,8 +42,4 @@ public class Book {
         return isAvailable;
     }
 
-    public void increaseBorrowCount() {
-        this.borrowCount++;
-    }
-
 }

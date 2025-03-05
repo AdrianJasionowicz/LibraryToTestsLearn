@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class BookService {
 
 
-    private BookRepository bookRepository;
-    private LibraryUserRepository libraryUserRepository;
+    private final BookRepository bookRepository;
+    private final LibraryUserRepository libraryUserRepository;
     @Autowired
     private BorrowHistoryService borrowHistoryService;
-    private LoginUserService loginUserService;
+    private final LoginUserService loginUserService;
 
     public BookService(BookRepository bookRepository, LibraryUserRepository libraryUserRepository, LoginUserService loginUserService) {
         this.bookRepository = bookRepository;

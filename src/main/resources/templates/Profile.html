@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil użytkownika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">👤 Profil użytkownika</h1>
+
+    <!-- Formularz edycji danych -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold mb-4">Edytuj dane</h2>
+        <form id="updateForm">
+            <label class="block text-gray-700">Imię:</label>
+            <input type="text" id="name" placeholder="Nowe imię" class="border p-2 rounded w-full mb-2">
+
+            <label class="block text-gray-700">Email:</label>
+            <input type="email" id="email" placeholder="Nowy email" class="border p-2 rounded w-full mb-4">
+
+            <button type="button" onclick="updateUser()" class="bg-blue-500 text-white px-4 py-2 rounded">Zapisz
+                zmiany
+            </button>
+        </form>
+    </div>
+
+    <!-- Formularz doładowania konta -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold mb-4">💰 Doładuj konto</h2>
+        <label class="block text-gray-700">Kwota:</label>
+        <input type="number" id="amount" min="1" placeholder="Podaj kwotę" class="border p-2 rounded w-full mb-4">
+
+        <button onclick="transferCash()" class="bg-green-500 text-white px-4 py-2 rounded">Doładuj</button>
+    </div>
+
+    <!-- Usunięcie konta -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">🚨 Usuń konto</h2>
+        <button onclick="deleteAccount()" class="bg-red-500 text-white px-4 py-2 rounded">Usuń konto</button>
+    </div>
+</div>
+
+<script>
+    async function updateUser() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz być zalogowany!");
+            return;
+        }
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+
+        const requestBody = {};
+        if (name) requestBody.name = name;
+        if (email) requestBody.email = email;
+
+        if (Object.keys(requestBody).length === 0) {
+            alert("Nie podano żadnych danych do zmiany!");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8080/user/updateUser", {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                alert("Dane użytkownika zaktualizowane!");
+                location.reload();
+            } else {
+                const message = await response.text();
+                alert("Błąd: " + message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Wystąpił błąd!");
+        }
+    }
+
+    async function transferCash() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz być zalogowany!");
+            return;
+        }
+
+        const amount = document.getElementById("amount").value;
+        if (!amount || amount <= 0) {
+            alert("Podaj poprawną kwotę!");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8080/user/transferCashToAccount", {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ammount: amount})
+            });
+
+            if (response.ok) {
+                alert("Saldo konta zostało doładowane!");
+                location.reload();
+            } else {
+                const message = await response.text();
+                alert("Błąd: " + message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Wystąpił błąd!");
+        }
+    }
+
+    async function deleteAccount() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz być zalogowany!");
+            return;
+        }
+
+        const password = prompt("Podaj swoje hasło, aby usunąć konto:");
+        if (!password) return;
+
+        try {
+            const response = await fetch("http://localhost:8080/user/delete", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({password})
+            });
+
+            const message = await response.text();
+
+            if (response.ok) {
+                alert(message);
+                localStorage.removeItem("token");
+                window.location.href = "/Login";
+            } else {
+                alert("Błąd: " + message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Wystąpił błąd!");
+        }
+    }
+</script>
+</body>
+</html>

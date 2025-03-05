@@ -14,8 +14,8 @@ public class LoginUserService {
 
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-    private LoginUserRepository loginUserRepository;
-    private LibraryUserService libraryUserService;
+    private final LoginUserRepository loginUserRepository;
+    private final LibraryUserService libraryUserService;
 
 
     public LoginUserService(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, LoginUserRepository loginUserRepository, LibraryUserService libraryUserService) {
@@ -52,8 +52,7 @@ public class LoginUserService {
 
 
     public String authenticateUser(LoginUser loginUser) {
-        LoginUser existingUser = loginUserRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
+        LoginUser existingUser = loginUserRepository.findByUsername(loginUser.getUsername()).orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
 
         if (!passwordEncoder.matches(loginUser.getPassword(), existingUser.getPassword())) {
             throw new RuntimeException("Nieprawidłowe hasło!");
@@ -78,7 +77,7 @@ public class LoginUserService {
     }
 
     public LoginUserDTO getLoginUserIdByUsername(String username) {
-      return  converLoginUserToDTO(loginUserRepository.findByUsername(username).orElseThrow());
+        return converLoginUserToDTO(loginUserRepository.findByUsername(username).orElseThrow());
     }
 
 

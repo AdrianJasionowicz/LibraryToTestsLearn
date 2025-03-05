@@ -8,7 +8,7 @@ import java.util.List;
 @Controller
 public class BorrowHistoryController {
 
-    private BorrowHistoryService borrowHistoryService;
+    private final BorrowHistoryService borrowHistoryService;
 
     public BorrowHistoryController(BorrowHistoryService borrowHistoryService) {
         this.borrowHistoryService = borrowHistoryService;
