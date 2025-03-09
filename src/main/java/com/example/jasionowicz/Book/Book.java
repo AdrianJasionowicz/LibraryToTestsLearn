@@ -1,5 +1,6 @@
 package com.example.jasionowicz.Book;
 
+import com.example.jasionowicz.Cart.BooksCart;
 import com.example.jasionowicz.User.LibraryUser;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -10,6 +11,8 @@ import org.apache.catalina.User;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +34,10 @@ public class Book {
     @ManyToOne
     @JsonIgnore
     private LibraryUser libraryUser;
+    @ManyToMany(mappedBy = "books")
+    @JsonIgnore
+    private List<BooksCart> carts = new ArrayList<>();
+
 
 
 

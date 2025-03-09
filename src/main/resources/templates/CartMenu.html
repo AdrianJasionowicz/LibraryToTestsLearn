@@ -61,7 +61,7 @@
             if (!response.ok) throw new Error("Nie udało się złożyć zamówienia!");
 
             alert("✅ Zamówienie złożone!");
-            fetchCart(); // Odśwież koszyk
+            fetchCart();
 
         } catch (error) {
             console.error(error);

@@ -25,35 +25,23 @@ public class LibraryUserService {
     private final LibraryUserRepository libraryUserRepository;
     private final BookService bookService;
     private final LoginUserService loginUserService;
-    private final UserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
 
-    public LibraryUserService(LibraryUserRepository libraryUserRepository, @Lazy BookService bookService, LoginUserRepository loginUserRepository, PasswordEncoder passwordEncoder, @Lazy LoginUserService loginUserService, UserDetailsService userDetailsService) {
+    public LibraryUserService(LibraryUserRepository libraryUserRepository, BookService bookService, LoginUserRepository loginUserRepository, PasswordEncoder passwordEncoder, LoginUserService loginUserService) {
         this.libraryUserRepository = libraryUserRepository;
         this.bookService = bookService;
         this.loginUserRepository = loginUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginUserService = loginUserService;
-        this.userDetailsService = userDetailsService;
     }
 
-    public LibraryUser save(LibraryUser libraryUser) {
-        return libraryUserRepository.save(libraryUser);
+    public void save(LibraryUser libraryUser) {
+         libraryUserRepository.save(libraryUser);
     }
 
     public LibraryUser getLibraryUser(Integer id) {
         return libraryUserRepository.getReferenceById(id);
     }
-
-    public List<LibraryUser> getLibraryUsers() {
-        return libraryUserRepository.findAll();
-    }
-
-    public void createLibraryUser(LibraryUser libraryUser) {
-
-        libraryUserRepository.save(libraryUser);
-    }
-
 
     public LibraryUserDTO getLibraryUserByEmail(String email) {
         LibraryUser libraryUser = libraryUserRepository.findByEmail(email);
@@ -71,16 +59,17 @@ public class LibraryUserService {
         return libraryUserDTO;
     }
 
-    public LibraryUser convertLibraryUserDTOToLibraryUserAndSave(LibraryUserDTO libraryUserDTO) {
+    public LibraryUser convertLibraryUserDTOToLibraryUser(LibraryUserDTO libraryUserDTO) {
         LibraryUser libraryUser = new LibraryUser();
         libraryUser.setId(libraryUserDTO.getId());
         libraryUser.setName(libraryUserDTO.getName());
         libraryUser.setEmail(libraryUserDTO.getEmail());
         libraryUser.setBorrowedBooks(libraryUserDTO.getBorrowedBooks());
         libraryUser.setAccountBalance(libraryUserDTO.getAccountBalance());
-        libraryUserRepository.save(libraryUser);
         return libraryUser;
     }
+
+
 
     public List<BookDTO> getBorrowedBooks(Integer userId) {
         return new ArrayList<>(bookService.getBooksByUserId(userId));
@@ -91,7 +80,7 @@ public class LibraryUserService {
         LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
         LibraryUserDTO libraryUserDTO = convertLibraryUserToLibraryUserDTO(loginUserDTO.getLibraryUser());
         libraryUserDTO.setAccountBalance(accountBalance);
-        convertLibraryUserDTOToLibraryUserAndSave(libraryUserDTO);
+        libraryUserRepository.save(convertLibraryUserDTOToLibraryUser(libraryUserDTO));
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -132,7 +121,7 @@ public class LibraryUserService {
         if (libraryUserDTO.getEmail() != null && !libraryUserDTO.getEmail().isBlank()) {
             oldLibraryUser.setEmail(libraryUserDTO.getEmail());
         }
-        convertLibraryUserDTOToLibraryUserAndSave(oldLibraryUserDTO);
+       save(convertLibraryUserDTOToLibraryUser(oldLibraryUserDTO));
 
     }
 

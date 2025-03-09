@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 
@@ -33,8 +34,10 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/Register", "/Login", "/static/**","/Menu","/admin/**","/auth/register/**","/auth/login/**","/books/**").permitAll()
-                        .requestMatchers("/books/**","/Profile","/Profile/**","/Cart","/Cart/**").hasAnyRole("ADMIN","USER","MODERATOR")
+                        .requestMatchers("/Register", "/Login", "/static/**","/Menu","/admin/**","/auth/register/**","/auth/login/**","/books/**","/books/","/CartMenu","/CartMenu/**","/cart/order").permitAll()
+                        .requestMatchers("/books/**","/Profile","/Profile/**","/cart","/cart/**").hasAnyAuthority("ROLE_ADMIN","ROLE_USER","ROLE_MODERATOR")
+                        .requestMatchers("/books/moderator/**").hasAuthority("ROLE_MODERATOR")
+                        .requestMatchers("/books/moderator/**").hasAuthority("ROLE_ADMIN")
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

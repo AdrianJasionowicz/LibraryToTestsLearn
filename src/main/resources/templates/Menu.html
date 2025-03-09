@@ -12,10 +12,10 @@
     <!-- Nawigacja -->
     <div class="flex justify-between mb-6">
         <h1 class="text-4xl font-bold">📚 Biblioteka</h1>
-        <div id="auth-buttons">
-            <a href="Login" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Logowanie</a>
-            <a href="Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
-            <a href="/Cart" class="bg-yellow-500 text-white px-4 py-2 rounded ml-2">🛒 Koszyk <span id="cart-count" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm"></span></a>
+        <div id="auth-buttons" class="flex items-center gap-2">
+            <a href="/CartMenu" class="bg-yellow-500 text-white px-4 py-2 rounded">🛒 Koszyk <span id="cart-count" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm"></span></a>
+            <div id="auth-links" class="flex items-center gap-2">
+            </div>
         </div>
     </div>
 
@@ -41,6 +41,25 @@
 
 <script>
     let cart = [];
+
+    function updateAuthButtons() {
+        const token = localStorage.getItem("token");
+        const authLinks = document.getElementById("auth-links");
+
+        if (token) {
+            // Zalogowany - pokazujemy tylko "Wyloguj"
+            authLinks.innerHTML = `
+                <button onclick="logoutUser()" class="bg-red-500 text-white px-4 py-2 rounded">Wyloguj</button>
+            `;
+        } else {
+            // Niezalogowany - pokazujemy "Logowanie" i "Rejestracja"
+            authLinks.innerHTML = `
+            <a href="/Login" class="bg-blue-500 text-white px-4 py-2 rounded">Logowanie</a>
+            <a href="/Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
+
+            `;
+        }
+    }
 
     async function fetchBooks(filterType = '') {
         const token = localStorage.getItem("token");
@@ -73,14 +92,14 @@
 
             books.forEach(book => {
                 bookList.innerHTML += `
-                <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
-                    <span class="text-lg">${book.title} - ${book.author} (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
-                    <button onclick="addToCart(${book.id}, '${book.title}', '${book.author}', ${book.isAvailable})"
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition ${book.isAvailable ? "" : "opacity-50 cursor-not-allowed"}"
-                        ${book.isAvailable ? "" : "disabled"}>
-                        ➕ Dodaj do koszyka
-                    </button>
-                </li>`;
+                    <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                        <span class="text-lg">${book.title} - ${book.author} (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
+                        <button onclick="addToCart(${book.id}, '${book.title}', '${book.author}', ${book.isAvailable})"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition ${book.isAvailable ? "" : "opacity-50 cursor-not-allowed"}"
+                            ${book.isAvailable ? "" : "disabled"}>
+                            ➕ Dodaj do koszyka
+                        </button>
+                    </li>`;
             });
 
         } catch (error) {
@@ -89,7 +108,6 @@
             document.getElementById("error-message").classList.remove("hidden");
         }
     }
-
     async function addToCart(bookId, title, author, isAvailable) {
         if (!isAvailable) {
             alert("❌ Ta książka jest już wypożyczona!");
@@ -103,16 +121,15 @@
         }
 
         try {
-            const response = await fetch("http://localhost:8080/cart/add", {
+            const response = await fetch(`http://localhost:8080/cart/add/${bookId}`, {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ bookId })
+                headers: { "Authorization": `Bearer ${token}` }
             });
 
             if (!response.ok) throw new Error("Nie udało się dodać do koszyka!");
 
             alert("✅ Dodano do koszyka!");
-            fetchCartCount(); // Aktualizuje liczbę książek w koszyku
+            fetchCartCount();
 
         } catch (error) {
             console.error(error);
@@ -120,11 +137,10 @@
         }
     }
 
+
     async function fetchCartCount() {
         const token = localStorage.getItem("token");
-        if (!token) {
-            return;
-        }
+        if (!token) return;
 
         try {
             const response = await fetch("http://localhost:8080/cart/get", {
@@ -135,7 +151,6 @@
             if (!response.ok) throw new Error("Błąd pobierania koszyka!");
 
             const books = await response.json();
-            cart = books;
             document.getElementById("cart-count").innerText = books.length;
 
         } catch (error) {
@@ -149,6 +164,7 @@
     }
 
     window.onload = function() {
+        updateAuthButtons();
         fetchBooks();
         fetchCartCount();
     };

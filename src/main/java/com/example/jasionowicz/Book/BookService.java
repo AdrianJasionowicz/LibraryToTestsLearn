@@ -4,10 +4,12 @@ import com.example.jasionowicz.BorrowHistory.BorrowHistoryService;
 import com.example.jasionowicz.Config.LoginBase.LoginUserDTO;
 import com.example.jasionowicz.Config.LoginBase.LoginUserService;
 import com.example.jasionowicz.User.LibraryUser;
-import com.example.jasionowicz.User.LibraryUserRepository;
+import com.example.jasionowicz.User.LibraryUserDTO;
+import com.example.jasionowicz.User.LibraryUserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,14 +24,12 @@ public class BookService {
 
 
     private final BookRepository bookRepository;
-    private final LibraryUserRepository libraryUserRepository;
     @Autowired
     private BorrowHistoryService borrowHistoryService;
     private final LoginUserService loginUserService;
 
-    public BookService(BookRepository bookRepository, LibraryUserRepository libraryUserRepository, LoginUserService loginUserService) {
+    public BookService(BookRepository bookRepository, LoginUserService loginUserService) {
         this.bookRepository = bookRepository;
-        this.libraryUserRepository = libraryUserRepository;
         this.loginUserService = loginUserService;
     }
 
@@ -55,7 +55,11 @@ public class BookService {
     }
 
     @Transactional
-    public void borrowBook(Integer bookId, LibraryUser libraryUser) {
+    public void borrowBook(Integer bookId, UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+        LibraryUser libraryUser = loginUserDTO.getLibraryUser();
+
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono książki"));
 
@@ -71,14 +75,15 @@ public class BookService {
 
 
     @Transactional
-    public boolean returnBook(Integer bookId, String username) {
+    public boolean returnBook(Integer bookId, UserDetails userDetails) {
+        String username = (String) userDetails.getUsername();
         Book book = getBook(bookId);
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
 
         if (book.isAvailable()) {
             throw new RuntimeException("Ta książka nie jest wypożyczona!");
         }
 
-        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
         if (loginUserDTO == null || loginUserDTO.getLibraryUser() == null) {
             throw new RuntimeException("Użytkownik nie został znaleziony lub nie ma powiązanego LibraryUser");
         }
@@ -90,7 +95,6 @@ public class BookService {
         if (!Objects.equals(loginUserDTO.getLibraryUser().getId(), userId)) {
             throw new RuntimeException("Nie masz uprawnień do zwrotu tej książki!");
         }
-
         book.setIsAvailable(true);
         book.setBorrowedByUserId(null);
         borrowHistoryService.stopRecordBorrow(bookId, userId);

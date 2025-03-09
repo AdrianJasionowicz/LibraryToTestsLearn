@@ -6,9 +6,11 @@ import com.example.jasionowicz.User.LibraryUser;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "BOOKS_CART")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,11 +24,11 @@ public class BooksCart {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private LibraryUser libraryUser;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "cart_books",
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    private List<Book> books;
+    private List<Book> books = new ArrayList<>();
 }

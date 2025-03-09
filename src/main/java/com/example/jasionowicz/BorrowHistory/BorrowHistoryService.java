@@ -65,7 +65,7 @@ public class BorrowHistoryService {
         if (ammount < 0) {
            LibraryUserDTO libraryUserDTO =  libraryUserService.convertLibraryUserToLibraryUserDTO(libraryUserService.getLibraryUser(userId));
             libraryUserDTO.setAccountBalance(ammount);
-            libraryUserService.convertLibraryUserDTOToLibraryUserAndSave(libraryUserDTO);
+            libraryUserService.save(libraryUserService.convertLibraryUserDTOToLibraryUser(libraryUserDTO));
         }
     }
 

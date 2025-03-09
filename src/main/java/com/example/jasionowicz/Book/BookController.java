@@ -8,7 +8,6 @@
     import org.springframework.http.ResponseEntity;
     import org.springframework.security.core.annotation.AuthenticationPrincipal;
     import org.springframework.security.core.userdetails.UserDetails;
-    import org.springframework.stereotype.Controller;
     import org.springframework.web.bind.annotation.*;
 
     import java.util.List;
@@ -67,30 +66,22 @@
             return ResponseEntity.noContent().build();
         }
 
-    @PutMapping("/{id}/borrow")
-    public ResponseEntity<String> borrowBook(@PathVariable Integer id, @AuthenticationPrincipal UserDetails userDetails) {
+    @PutMapping("/{bookId}/borrow")
+    public ResponseEntity<String> borrowBook(@PathVariable Integer bookId, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Brak autoryzacji! Użytkownik nierozpoznany.");
         }
-        String username = userDetails.getUsername();
-        LoginUser loginUser = loginUserRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
-        LibraryUser libraryUser = libraryUserRepository.findByLoginUser(loginUser)
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono LibraryUser"));
-        bookService.borrowBook(id, libraryUser);
-        return ResponseEntity.ok("Książka wypożyczona przez " + libraryUser.getName());
+        bookService.borrowBook(bookId, userDetails);
+        return ResponseEntity.ok("Książka wypożyczona");
     }
 
-
-
-    @PutMapping("/{id}/return")
+    @PutMapping("moderator/{id}/return")
         public ResponseEntity<String> returnBook(@PathVariable Integer id,@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Brak autoryzacji");
         }
-        String username = userDetails.getUsername();
         try {
-            boolean success = bookService.returnBook(id, username);
+            boolean success = bookService.returnBook(id, userDetails);
             if (success) {
                 return ResponseEntity.ok("Książka została zwrócona!");
             } else {
@@ -119,5 +110,8 @@
         public ResponseEntity<List<BookDTO>> getAllBooksByName(@PathVariable String bookName) {
             return ResponseEntity.ok().body(bookService.getAllByTitle(bookName));
         }
+
+
+
 
     }

@@ -1,10 +1,15 @@
 package com.example.jasionowicz;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Map;
 
 @Controller
 public class MainController {
@@ -24,9 +29,9 @@ public class MainController {
         return "Register";
     }
 
-    @GetMapping("/Cart")
+    @GetMapping("/CartMenu")
     public String cart() {
-        return "Cart";
+        return "CartMenu";
     }
 
     @GetMapping("/Profile")
@@ -36,5 +41,18 @@ public class MainController {
         }
         model.addAttribute("username", userDetails.getUsername());
         return "Profile";
+    }
+
+    @GetMapping("/auth/getRole")
+    public ResponseEntity<Map<String, String>> getUserRole(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("role", "USER"));
+        }
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("USER");
+
+        return ResponseEntity.ok(Map.of("role", role));
     }
 }
