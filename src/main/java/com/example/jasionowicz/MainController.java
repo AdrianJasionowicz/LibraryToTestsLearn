@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -44,15 +46,16 @@ public class MainController {
     }
 
     @GetMapping("/auth/getRole")
-    public ResponseEntity<Map<String, String>> getUserRole(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Map<String, List<String>>> getUserRoles(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("role", "USER"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("roles", List.of("USER")));
         }
-        String role = userDetails.getAuthorities().stream()
-                .findFirst()
-                .map(GrantedAuthority::getAuthority)
-                .orElse("USER");
 
-        return ResponseEntity.ok(Map.of("role", role));
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(Map.of("roles", roles));
     }
+
 }

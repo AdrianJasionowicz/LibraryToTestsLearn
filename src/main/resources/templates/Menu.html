@@ -13,9 +13,10 @@
     <div class="flex justify-between mb-6">
         <h1 class="text-4xl font-bold">📚 Biblioteka</h1>
         <div id="auth-buttons" class="flex items-center gap-2">
-            <a href="/CartMenu" class="bg-yellow-500 text-white px-4 py-2 rounded">🛒 Koszyk <span id="cart-count" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm"></span></a>
-            <div id="auth-links" class="flex items-center gap-2">
-            </div>
+            <a href="/CartMenu" class="bg-yellow-500 text-white px-4 py-2 rounded">
+                🛒 Koszyk <span id="cart-count" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm">0</span>
+            </a>
+            <div id="auth-links" class="flex items-center gap-2"></div>
         </div>
     </div>
 
@@ -40,24 +41,40 @@
 </div>
 
 <script>
-    let cart = [];
+    let userRoles = [];
 
     function updateAuthButtons() {
         const token = localStorage.getItem("token");
         const authLinks = document.getElementById("auth-links");
 
         if (token) {
-            // Zalogowany - pokazujemy tylko "Wyloguj"
             authLinks.innerHTML = `
                 <button onclick="logoutUser()" class="bg-red-500 text-white px-4 py-2 rounded">Wyloguj</button>
             `;
         } else {
-            // Niezalogowany - pokazujemy "Logowanie" i "Rejestracja"
             authLinks.innerHTML = `
-            <a href="/Login" class="bg-blue-500 text-white px-4 py-2 rounded">Logowanie</a>
-            <a href="/Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
-
+                <a href="/Login" class="bg-blue-500 text-white px-4 py-2 rounded">Logowanie</a>
+                <a href="/Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
             `;
+        }
+    }
+
+    async function fetchUserRole(token) {
+        try {
+            const response = await fetch("http://localhost:8080/auth/getRole", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                userRoles = data.roles || [];
+                console.log("👤 Role użytkownika:", userRoles);
+            } else {
+                console.error("Błąd pobierania ról:", response.status);
+            }
+        } catch (error) {
+            console.error("Nie udało się pobrać ról użytkownika:", error);
         }
     }
 
@@ -68,6 +85,8 @@
             document.getElementById("error-message").classList.remove("hidden");
             return;
         }
+
+        await fetchUserRole(token);
 
         const query = document.getElementById("searchQuery").value.trim();
         let url = "http://localhost:8080/books/getAll";
@@ -94,13 +113,21 @@
                 bookList.innerHTML += `
                     <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
                         <span class="text-lg">${book.title} - ${book.author} (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
-                        <button onclick="addToCart(${book.id}, '${book.title}', '${book.author}', ${book.isAvailable})"
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition ${book.isAvailable ? "" : "opacity-50 cursor-not-allowed"}"
-                            ${book.isAvailable ? "" : "disabled"}>
-                            ➕ Dodaj do koszyka
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="addToCart(${book.id})"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition">
+                                ➕ Dodaj do koszyka
+                            </button>
+                            ${userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_MODERATOR") ? `
+                            <button onclick="returnBook(${book.id})"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">
+                                🔄 Zwróć książkę
+                            </button>` : ''}
+                        </div>
                     </li>`;
             });
+
+            fetchCartCount();
 
         } catch (error) {
             console.error("Wystąpił błąd:", error);
@@ -108,12 +135,28 @@
             document.getElementById("error-message").classList.remove("hidden");
         }
     }
-    async function addToCart(bookId, title, author, isAvailable) {
-        if (!isAvailable) {
-            alert("❌ Ta książka jest już wypożyczona!");
-            return;
-        }
 
+    async function fetchCartCount() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        try {
+            const response = await fetch("http://localhost:8080/cart/get", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("Błąd pobierania koszyka!");
+
+            const books = await response.json();
+            document.getElementById("cart-count").innerText = books.length;
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function addToCart(bookId) {
         const token = localStorage.getItem("token");
         if (!token) {
             alert("Musisz być zalogowany!");
@@ -137,33 +180,12 @@
         }
     }
 
-
-    async function fetchCartCount() {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        try {
-            const response = await fetch("http://localhost:8080/cart/get", {
-                method: "GET",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-
-            if (!response.ok) throw new Error("Błąd pobierania koszyka!");
-
-            const books = await response.json();
-            document.getElementById("cart-count").innerText = books.length;
-
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     function logoutUser() {
         localStorage.removeItem("token");
         window.location.href = "/Login";
     }
 
-    window.onload = function() {
+    window.onload = function () {
         updateAuthButtons();
         fetchBooks();
         fetchCartCount();
