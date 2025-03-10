@@ -3,67 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Tailwind</title>
-    <link href="/static/output.css" rel="stylesheet">
+    <title>📚 Biblioteka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-500 text-white text-center p-10">
-<h1 class="text-4xl font-bold">Działa Tailwind!</h1>
-</body>
-</html>
+<body class="bg-gray-100 text-gray-900">
 
-<title>Biblioteka</title>
-    <script>
-        async function fetchBooks() {
-            const response = await fetch("http://localhost:8080/books");
+<div class="container mx-auto p-6">
+    <!-- Nawigacja -->
+    <div class="flex justify-between mb-6">
+        <h1 class="text-4xl font-bold">📚 Biblioteka</h1>
+        <div id="auth-buttons" class="flex items-center gap-2">
+            <a href="/CartMenu" class="bg-yellow-500 text-white px-4 py-2 rounded">
+                🛒 Koszyk <span id="cart-count" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm">0</span>
+            </a>
+            <div id="auth-links" class="flex items-center gap-2"></div>
+        </div>
+    </div>
+
+    <!-- Wyszukiwanie książek -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">🔍 Wyszukaj książkę</h2>
+        <div class="flex gap-4">
+            <input type="text" id="searchQuery" placeholder="Wpisz tytuł lub autora" class="border p-2 rounded w-2/3">
+            <button onclick="fetchBooks('title')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">Szukaj po tytule</button>
+            <button onclick="fetchBooks('author')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">Szukaj po autorze</button>
+        </div>
+    </div>
+
+    <!-- Komunikat o błędzie -->
+    <p id="error-message" class="text-red-500 text-center mt-4 hidden"></p>
+
+    <!-- Lista książek -->
+    <div class="mt-6">
+        <h2 class="text-2xl font-semibold mb-4">📖 Lista książek</h2>
+        <ul id="book-list" class="space-y-4"></ul>
+    </div>
+</div>
+
+<script>
+    let userRoles = [];
+
+    function updateAuthButtons() {
+        const token = localStorage.getItem("token");
+        const authLinks = document.getElementById("auth-links");
+
+        if (token) {
+            authLinks.innerHTML = `
+                <button onclick="logoutUser()" class="bg-red-500 text-white px-4 py-2 rounded">Wyloguj</button>
+            `;
+        } else {
+            authLinks.innerHTML = `
+                <a href="/Login" class="bg-blue-500 text-white px-4 py-2 rounded">Logowanie</a>
+                <a href="/Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
+            `;
+        }
+    }
+
+    async function fetchUserRole(token) {
+        try {
+            const response = await fetch("http://localhost:8080/auth/getRole", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                userRoles = data.roles || [];
+                console.log("👤 Role użytkownika:", userRoles);
+            } else {
+                console.error("Błąd pobierania ról:", response.status);
+            }
+        } catch (error) {
+            console.error("Nie udało się pobrać ról użytkownika:", error);
+        }
+    }
+
+    async function fetchBooks(filterType = '') {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            document.getElementById("error-message").innerText = "Musisz się zalogować, aby zobaczyć książki.";
+            document.getElementById("error-message").classList.remove("hidden");
+            return;
+        }
+
+        await fetchUserRole(token);
+
+        const query = document.getElementById("searchQuery").value.trim();
+        let url = "http://localhost:8080/books/getAll";
+
+        if (query && filterType === 'title') {
+            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByTitle`;
+        } else if (query && filterType === 'author') {
+            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByAuthor`;
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+            });
+
+            if (!response.ok) throw new Error("Błąd pobierania danych!");
+
             const books = await response.json();
             const bookList = document.getElementById("book-list");
             bookList.innerHTML = "";
+
             books.forEach(book => {
                 bookList.innerHTML += `
-                    <li>${book.title} - ${book.author}
-                        (${book.isAvailable ? "Dostępna" : "Wypożyczona"})
-                        <button onclick="borrowBook(${book.id})">Wypożycz</button>
-                        <button onclick="returnBook(${book.id})">Zwróć</button>
+                    <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                        <span class="text-lg">${book.title} - ${book.author} (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
+                        <div class="flex gap-2">
+                            <button onclick="addToCart(${book.id})"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition">
+                                ➕ Dodaj do koszyka
+                            </button>
+                            ${userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_MODERATOR") ? `
+                            <button onclick="returnBook(${book.id})"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">
+                                🔄 Zwróć książkę
+                            </button>` : ''}
+                        </div>
                     </li>`;
             });
-        }
 
-        async function addBook() {
-            const title = document.getElementById("title").value;
-            const author = document.getElementById("author").value;
-            await fetch("http://localhost:8080/books", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, author, isAvailable: true })
+            fetchCartCount();
+
+        } catch (error) {
+            console.error("Wystąpił błąd:", error);
+            document.getElementById("error-message").innerText = "Nie udało się załadować książek.";
+            document.getElementById("error-message").classList.remove("hidden");
+        }
+    }
+
+    async function fetchCartCount() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        try {
+            const response = await fetch("http://localhost:8080/cart/get", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` }
             });
-            fetchBooks();
+
+            if (!response.ok) throw new Error("Błąd pobierania koszyka!");
+
+            const books = await response.json();
+            document.getElementById("cart-count").innerText = books.length;
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function addToCart(bookId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Musisz być zalogowany!");
+            return;
         }
 
-        async function borrowBook(bookId) {
-            const userId = prompt("Podaj ID użytkownika:");
-            if (userId) {
-                await fetch(`http://localhost:8080/books/borrow/${bookId}/${userId}`, { method: "POST" });
-                fetchBooks();
-            }
+        try {
+            const response = await fetch(`http://localhost:8080/cart/add/${bookId}`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("Nie udało się dodać do koszyka!");
+
+            alert("✅ Dodano do koszyka!");
+            fetchCartCount();
+
+        } catch (error) {
+            console.error(error);
+            alert("❌ Błąd: " + error.message);
         }
+    }
 
-        async function returnBook(bookId) {
-            await fetch(`http://localhost:8080/books/return/${bookId}`, { method: "POST" });
-            fetchBooks();
-        }
+    function logoutUser() {
+        localStorage.removeItem("token");
+        window.location.href = "/Login";
+    }
 
-        window.onload = fetchBooks;
-    </script>
-</head>
-<body>
-<h1>Biblioteka</h1>
+    window.onload = function () {
+        updateAuthButtons();
+        fetchBooks();
+        fetchCartCount();
+    };
+</script>
 
-<h2>Dodaj nową książkę</h2>
-<input type="text" id="title" placeholder="Tytuł">
-<input type="text" id="author" placeholder="Autor">
-<button onclick="addBook()">Dodaj</button>
-
-<h2>Lista książek</h2>
-<ul id="book-list"></ul>
 </body>
 </html>

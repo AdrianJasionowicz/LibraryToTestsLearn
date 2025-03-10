@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejestracja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+<div class="bg-white p-8 rounded-lg shadow-lg w-96">
+    <h2 class="text-2xl font-bold mb-6 text-center">Rejestracja</h2>
+
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Nazwa użytkownika</label>
+        <input type="text" id="username" class="w-full p-2 border rounded">
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Hasło</label>
+        <input type="password" id="password" class="w-full p-2 border rounded">
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Potwierdź hasło</label>
+        <input type="password" id="confirmPassword" class="w-full p-2 border rounded">
+    </div>
+
+    <button onclick="registerUser()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded">
+        Zarejestruj się
+    </button>
+
+    <p class="text-center text-sm text-gray-600 mt-4">
+        Masz już konto? <a href="/Login" class="text-blue-500">Zaloguj się</a>
+    </p>
+
+    <p id="errorMessage" class="text-red-500 text-center mt-3 hidden"></p>
+    <p id="successMessage" class="text-green-500 text-center mt-3 hidden"></p>
+</div>
+
+<script>
+    async function registerUser() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
+        const errorMessage = document.getElementById("errorMessage");
+        const successMessage = document.getElementById("successMessage");
+
+        errorMessage.classList.add("hidden");
+        successMessage.classList.add("hidden");
+
+        // Walidacja pustych pól
+        if (!username || !password || !confirmPassword) {
+            errorMessage.innerText = "Wszystkie pola muszą być wypełnione!";
+            errorMessage.classList.remove("hidden");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            errorMessage.innerText = "Hasła nie są identyczne!";
+            errorMessage.classList.remove("hidden");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8080/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                successMessage.innerText = "Rejestracja udana! Możesz się zalogować.";
+                successMessage.classList.remove("hidden");
+                setTimeout(() => window.location.href = "/Login", 2000);
+            } else {
+                const errorData = await response.json();
+                errorMessage.innerText = errorData.message || "Błąd rejestracji! Użytkownik może już istnieć.";
+                errorMessage.classList.remove("hidden");
+            }
+        } catch (error) {
+            errorMessage.innerText = "Błąd połączenia z serwerem.";
+            errorMessage.classList.remove("hidden");
+        }
+    }
+</script>
+
+</body>
+</html>
