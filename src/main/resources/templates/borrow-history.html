@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>📖 Historia wypożyczeń</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">📖 Historia wypożyczeń</h1>
+
+    <div id="historyContainer" class="space-y-4">
+        <p>⏳ Ładowanie historii...</p>
+    </div>
+
+    <div class="mt-10 text-center">
+        <button onclick="window.location.href='/Menu'"
+                class="bg-gray-700 text-white px-6 py-3 rounded hover:bg-gray-800 transition">
+            ⬅️ Wróć do menu
+        </button>
+    </div>
+</div>
+
+<script>
+    async function loadBorrowHistory() {
+        try {
+            const userRes = await fetch("http://localhost:8080/user/getUserInfo", {
+                credentials: "include"
+            });
+
+            if (!userRes.ok) throw new Error("Brak danych użytkownika");
+
+            const userData = await userRes.json();
+            const userId = userData.id;
+
+            const historyRes = await fetch(`http://localhost:8080/getBorrowHistory/${userId}`, {
+                credentials: "include"
+            });
+
+            if (!historyRes.ok) throw new Error("Błąd historii wypożyczeń");
+
+            const books = await historyRes.json();
+            renderHistory(books);
+
+        } catch (err) {
+            console.error("❌ Błąd:", err);
+            document.getElementById("historyContainer").innerHTML = `
+                <p class="text-red-500">Nie udało się załadować historii wypożyczeń 😢</p>
+            `;
+        }
+    }
+
+    function renderHistory(books) {
+        const container = document.getElementById("historyContainer");
+        container.innerHTML = "";
+
+        if (!books.length) {
+            container.innerHTML = "<p>📭 Brak historii wypożyczeń</p>";
+            return;
+        }
+
+        books.forEach(entry => {
+            const div = document.createElement("div");
+            div.className = "bg-white p-4 rounded shadow border";
+
+            const title = entry.book?.title ?? "Brak tytułu";
+            const author = entry.book?.author ?? "Brak autora";
+            const borrowDate = entry.borrowDate ?? "brak daty";
+            const returnDate = entry.returnDate ?? null;
+            const fee = (entry.fee ?? 0).toFixed(2);
+            const returned = returnDate ? '✅ Tak' : '❌ Nie';
+
+            div.innerHTML = `
+            <p><strong>📕 Tytuł:</strong> ${title}</p>
+            <p><strong>✍️ Autor:</strong> ${author}</p>
+            <p><strong>📅 Data wypożyczenia:</strong> ${borrowDate}</p>
+            <p><strong>📆 Data zwrotu:</strong> ${returnDate ? returnDate : '⏳ Jeszcze nie zwrócono'}</p>
+            <p><strong>💰 Opłata:</strong> ${fee} zł</p>
+            <p><strong>📦 Zwrócono:</strong> ${returned}</p>
+        `;
+
+            container.appendChild(div);
+        });
+    }
+
+
+
+    loadBorrowHistory();
+</script>
+
+</body>
+</html>

@@ -13,10 +13,25 @@
     <div class="flex justify-between mb-6">
         <h1 class="text-4xl font-bold">📚 Biblioteka</h1>
         <div id="auth-buttons" class="flex items-center gap-2">
+            <!-- Koszyk -->
             <a href="/CartMenu" class="bg-yellow-500 text-white px-4 py-2 rounded">
                 🛒 Koszyk <span id="cart-count" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm">0</span>
             </a>
-            <div id="auth-links" class="flex items-center gap-2"></div>
+
+            <!-- Historia wypożyczeń -->
+            <a href="/borrow-history" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition">
+                📖 Historia wypożyczeń
+            </a>
+
+            <!-- Profil i Wyloguj -->
+            <div id="auth-links" class="flex items-center gap-2">
+                <button onclick="goToProfile()" class="bg-gray-500 text-white px-4 py-2 rounded">
+                    👤 Profil
+                </button>
+                <button onclick="logoutUser()" class="bg-red-500 text-white px-4 py-2 rounded">
+                    🚪 Wyloguj
+                </button>
+            </div>
         </div>
     </div>
 
@@ -25,8 +40,12 @@
         <h2 class="text-2xl font-semibold mb-4">🔍 Wyszukaj książkę</h2>
         <div class="flex gap-4">
             <input type="text" id="searchQuery" placeholder="Wpisz tytuł lub autora" class="border p-2 rounded w-2/3">
-            <button onclick="fetchBooks('title')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">Szukaj po tytule</button>
-            <button onclick="fetchBooks('author')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">Szukaj po autorze</button>
+            <button onclick="fetchBooks('title')"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">Szukaj po tytule
+            </button>
+            <button onclick="fetchBooks('author')"
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">Szukaj po autorze
+            </button>
         </div>
     </div>
 
@@ -35,7 +54,7 @@
 
     <!-- Lista książek -->
     <div class="mt-6">
-        <h2 class="text-2xl font-semibold mb-4">📖 Lista książek</h2>
+        <h2 class="text-2xl font-semibold mb-4">💖 Lista książek</h2>
         <ul id="book-list" class="space-y-4"></ul>
     </div>
 </div>
@@ -43,50 +62,70 @@
 <script>
     let userRoles = [];
 
-    function updateAuthButtons() {
-        const token = localStorage.getItem("token");
-        const authLinks = document.getElementById("auth-links");
+    async function fetchUserRole() {
+        try {
+            const response = await fetch("http://localhost:8080/auth/getRole", {
+                credentials: "include"
+            });
 
-        if (token) {
-            authLinks.innerHTML = `
-                <button onclick="logoutUser()" class="bg-red-500 text-white px-4 py-2 rounded">Wyloguj</button>
-            `;
-        } else {
-            authLinks.innerHTML = `
-                <a href="/Login" class="bg-blue-500 text-white px-4 py-2 rounded">Logowanie</a>
-                <a href="/Register" class="bg-green-500 text-white px-4 py-2 rounded">Rejestracja</a>
-            `;
+            if (!response.ok) return false;
+
+            const data = await response.json();
+            userRoles = data.roles || [];
+            console.log("🔑 Role użytkownika:", userRoles);
+            return true;
+        } catch (e) {
+            console.error("❌ Błąd pobierania roli użytkownika:", e);
+            return false;
         }
     }
 
-    async function fetchUserRole(token) {
+    function updateAuthButtons() {
+        const authLinks = document.getElementById("auth-links");
+        authLinks.innerHTML = `
+            <button onclick="goToProfile()" class="bg-gray-500 text-white px-4 py-2 rounded">👤 Profil</button>
+            <button onclick="logoutUser()" class="bg-red-500 text-white px-4 py-2 rounded">🚪 Wyloguj</button>
+        `;
+    }
+
+    async function fetchWithAuth(url, options = {}) {
         try {
-            const response = await fetch("http://localhost:8080/auth/getRole", {
-                method: "GET",
-                headers: { "Authorization": `Bearer ${token}` }
+            const response = await fetch(url, {
+                ...options,
+                credentials: "include",
+                headers: {
+                    ...options.headers,
+                    "Content-Type": "application/json"
+                }
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                userRoles = data.roles || [];
-                console.log("👤 Role użytkownika:", userRoles);
-            } else {
-                console.error("Błąd pobierania ról:", response.status);
+            if (!response.ok) {
+                console.warn(`⚠️ Błąd ${response.status} przy fetch ${url}`);
+                const errorText = await response.text();
+                console.error("🧘 Odpowiedź serwera:", errorText);
+
+                if (response.status === 401 || response.status === 403) {
+                    console.error("🔐 Błąd autoryzacji - wylogowuję użytkownika");
+                    logoutUser();
+                    return null;
+                }
+
+                throw new Error(`Błąd ${response.status}: ${errorText}`);
             }
-        } catch (error) {
-            console.error("Nie udało się pobrać ról użytkownika:", error);
+
+            return response;
+        } catch (e) {
+            console.error("💥 Błąd fetch:", e);
+            document.getElementById("error-message").innerText = `Błąd komunikacji z serwerem: ${e.message}`;
+            document.getElementById("error-message").classList.remove("hidden");
+            return null;
         }
     }
 
     async function fetchBooks(filterType = '') {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            document.getElementById("error-message").innerText = "Musisz się zalogować, aby zobaczyć książki.";
-            document.getElementById("error-message").classList.remove("hidden");
-            return;
-        }
-
-        await fetchUserRole(token);
+        document.getElementById("error-message").classList.add("hidden");
+        const hasRoles = await fetchUserRole();
+        if (!hasRoles) return;
 
         const query = document.getElementById("searchQuery").value.trim();
         let url = "http://localhost:8080/books/getAll";
@@ -97,20 +136,13 @@
             url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByAuthor`;
         }
 
-        try {
-            const response = await fetch(url, {
-                method: "GET",
-                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
-            });
+        const response = await fetchWithAuth(url);
 
-            if (!response.ok) throw new Error("Błąd pobierania danych!");
+        if (response) {
+            try {
+                const books = await response.json();
 
-            const books = await response.json();
-            const bookList = document.getElementById("book-list");
-            bookList.innerHTML = "";
-
-            books.forEach(book => {
-                bookList.innerHTML += `
+                document.getElementById("book-list").innerHTML = books.map(book => `
                     <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
                         <span class="text-lg">${book.title} - ${book.author} (${book.isAvailable ? "📗 Dostępna" : "📕 Wypożyczona"})</span>
                         <div class="flex gap-2">
@@ -118,77 +150,95 @@
                                 class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition">
                                 ➕ Dodaj do koszyka
                             </button>
-                            ${userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_MODERATOR") ? `
+                            ${(userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_MODERATOR")) ? `
                             <button onclick="returnBook(${book.id})"
                                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">
                                 🔄 Zwróć książkę
                             </button>` : ''}
                         </div>
-                    </li>`;
-            });
+                    </li>
+                `).join('');
 
-            fetchCartCount();
-
-        } catch (error) {
-            console.error("Wystąpił błąd:", error);
-            document.getElementById("error-message").innerText = "Nie udało się załadować książek.";
-            document.getElementById("error-message").classList.remove("hidden");
+                fetchCartCount();
+            } catch (e) {
+                document.getElementById("error-message").innerText = "Błąd przetwarzania danych z serwera";
+                document.getElementById("error-message").classList.remove("hidden");
+            }
         }
     }
 
     async function fetchCartCount() {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+        const response = await fetchWithAuth("http://localhost:8080/cart/get");
 
-        try {
-            const response = await fetch("http://localhost:8080/cart/get", {
-                method: "GET",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-
-            if (!response.ok) throw new Error("Błąd pobierania koszyka!");
-
+        if (response) {
             const books = await response.json();
             document.getElementById("cart-count").innerText = books.length;
-
-        } catch (error) {
-            console.error(error);
         }
     }
 
     async function addToCart(bookId) {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("Musisz być zalogowany!");
-            return;
-        }
+        const response = await fetchWithAuth(`http://localhost:8080/cart/add/${bookId}`, {method: "POST"});
 
-        try {
-            const response = await fetch(`http://localhost:8080/cart/add/${bookId}`, {
-                method: "POST",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-
-            if (!response.ok) throw new Error("Nie udało się dodać do koszyka!");
-
+        if (response) {
             alert("✅ Dodano do koszyka!");
             fetchCartCount();
-
-        } catch (error) {
-            console.error(error);
-            alert("❌ Błąd: " + error.message);
         }
     }
 
-    function logoutUser() {
-        localStorage.removeItem("token");
+    async function returnBook(bookId) {
+        try {
+            const response = await fetchWithAuth(`http://localhost:8080/books/moderator/return/${bookId}`, {
+                method: "PUT",
+                credentials: "include",
+            });
+
+            if (!response) {
+                throw new Error("Brak odpowiedzi z serwera (response === null)");
+            }
+
+            if (!response.ok) throw new Error("Nie udało się zwrócić książki");
+
+            alert("🔄 Książka została zwrócona!");
+            fetchBooks();
+        } catch (error) {
+            console.error("Błąd podczas zwracania książki:", error);
+            alert("Błąd podczas zwracania książki!");
+        }
+    }
+
+    async function logoutUser() {
+        await fetch("http://localhost:8080/auth/logout", {
+            method: "POST",
+            credentials: "include"
+        });
         window.location.href = "/Login";
     }
 
-    window.onload = function () {
-        updateAuthButtons();
-        fetchBooks();
-        fetchCartCount();
+    function goToProfile() {
+        window.location.href = "/Profile";
+    }
+
+    async function verifyToken() {
+        try {
+            const response = await fetch("http://localhost:8080/auth/getRole", {
+                credentials: "include"
+            });
+            if (!response.ok) {
+                window.location.href = "/Login";
+                return false;
+            }
+            return true;
+        } catch (e) {
+            window.location.href = "/Login";
+            return false;
+        }
+    }
+
+    window.onload = async function () {
+        if (await verifyToken()) {
+            updateAuthButtons();
+            fetchBooks();
+        }
     };
 </script>
 

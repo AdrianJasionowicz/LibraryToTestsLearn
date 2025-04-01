@@ -35,17 +35,32 @@ private final LibraryUserService libraryUserService;
         return ResponseEntity.ok("Konto zostało usunięte!");
     }
 
-    @PutMapping("/updateUser")
-    public ResponseEntity<String> updateUser(@AuthenticationPrincipal UserDetails userDetails, LibraryUserDTO libraryUserDto) {
+    @PutMapping("/user/changeEmail")
+    public ResponseEntity<String> updateUser(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String email, @RequestParam String password) {
         if (userDetails == null) {
             return ResponseEntity.badRequest().body("Brak autoryzacji");
         }
-        if (libraryUserDto == null) {
-            return ResponseEntity.badRequest().body("Brak danych do zmienienia!!!");
-        }
-        libraryUserService.updateLibraryUser(userDetails,libraryUserDto);
+        libraryUserService.updateEmail(userDetails,email,password);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Zmieniono Dane");
+    }
+
+    @PutMapping("/user/changeName")
+    public ResponseEntity<?> updateName(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String name, @RequestParam String password) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak autoryzacji");
+        }
+        return libraryUserService.updateNameOfUser(userDetails, name, password);
+    }
+
+    @PutMapping("/user/changePassword")
+    public ResponseEntity<String> updatePassword(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String oldPassword, @RequestParam String newPassword) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak autoryzacji");
+        }
+        libraryUserService.updatePassword(userDetails,oldPassword,newPassword);
+
+        return ResponseEntity.ok().body("Zmieniono Dane");
     }
 
     @PutMapping("/transferCashToAccount")
@@ -59,4 +74,13 @@ private final LibraryUserService libraryUserService;
         libraryUserService.setAccountBalance(userDetails,ammount);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/user/getUserInfo")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak uzytkownika");
+        }
+       return ResponseEntity.ok(libraryUserService.getProfile(userDetails));
+    }
+
 }

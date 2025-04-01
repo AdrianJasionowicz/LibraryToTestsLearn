@@ -58,4 +58,10 @@ public class MainController {
         return ResponseEntity.ok(Map.of("roles", roles));
     }
 
+    @GetMapping("/borrow-history")
+    public String borrowHistory(@AuthenticationPrincipal UserDetails userDetails) {
+
+        return "borrow-history";
+    }
+
 }

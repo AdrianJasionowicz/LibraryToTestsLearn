@@ -87,15 +87,6 @@ public class BooksCartService {
         });
     }
 
-    public List<Book> getBooksInCart(UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        LoginUserDTO loginUser = loginUserService.getLoginUserIdByUsername(username);
-
-        LibraryUser libraryUser = loginUser.getLibraryUser();
-
-        return getCartByUser(libraryUser).getBooks();
-    }
-
     public List<Book> getCart(String username) {
         LibraryUser user = loginUserService.getLoginUserIdByUsername(username).getLibraryUser();
         return booksCartRepository.findByLibraryUser(user)

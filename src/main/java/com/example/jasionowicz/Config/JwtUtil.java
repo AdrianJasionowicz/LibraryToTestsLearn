@@ -32,19 +32,6 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public List<String> extractRoles(String token) {
-        Claims claims = extractAllClaims(token);
-        Object rolesObject = claims.get("roles");
-
-        if (rolesObject instanceof List<?>) {
-            return ((List<?>) rolesObject).stream()
-                    .map(Object::toString)
-                    .toList();
-        } else if (rolesObject instanceof String) {
-            return List.of(rolesObject.toString());
-        }
-        return List.of();
-    }
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);

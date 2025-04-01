@@ -6,6 +6,7 @@
     import com.example.jasionowicz.User.LibraryUserRepository;
     import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
+    import org.springframework.security.access.prepost.PreAuthorize;
     import org.springframework.security.core.annotation.AuthenticationPrincipal;
     import org.springframework.security.core.userdetails.UserDetails;
     import org.springframework.web.bind.annotation.*;
@@ -75,11 +76,9 @@
         return ResponseEntity.ok("Książka wypożyczona");
     }
 
-    @PutMapping("moderator/{id}/return")
-        public ResponseEntity<String> returnBook(@PathVariable Integer id,@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Brak autoryzacji");
-        }
+    @PutMapping("/moderator/return/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public ResponseEntity<String> returnBook(@PathVariable Integer id,@AuthenticationPrincipal UserDetails userDetails) {
         try {
             boolean success = bookService.returnBook(id, userDetails);
             if (success) {

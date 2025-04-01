@@ -40,12 +40,11 @@
         const response = await fetch("http://localhost:8080/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ username, password })
         });
 
         if (response.ok) {
-            const data = await response.json();
-            localStorage.setItem("token", data.token);
             window.location.href = "/Menu";
         } else {
             document.getElementById("errorMessage").innerText = "Nieprawidłowe dane logowania!";

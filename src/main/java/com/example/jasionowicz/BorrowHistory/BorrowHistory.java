@@ -5,6 +5,8 @@ import com.example.jasionowicz.User.LibraryUser;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 @Entity
@@ -23,7 +25,7 @@ public class BorrowHistory {
 
     @ManyToOne
     private Book book;
-
+    private BigDecimal fee = BigDecimal.valueOf(10.25).setScale(2, RoundingMode.HALF_UP);
     private LocalDate borrowDate;
     private LocalDate returnDate;
 }

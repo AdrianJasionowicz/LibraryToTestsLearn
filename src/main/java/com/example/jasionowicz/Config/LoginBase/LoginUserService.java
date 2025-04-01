@@ -1,11 +1,16 @@
 package com.example.jasionowicz.Config.LoginBase;
 
+import com.example.jasionowicz.Config.CustomUserDetailsService;
 import com.example.jasionowicz.Config.JwtUtil;
 import com.example.jasionowicz.User.LibraryUser;
 import com.example.jasionowicz.User.LibraryUserRepository;
 import com.example.jasionowicz.User.LibraryUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +23,17 @@ public class LoginUserService {
     private final PasswordEncoder passwordEncoder;
     private final LoginUserRepository loginUserRepository;
     private final LibraryUserRepository libraryUserRepository;
+    private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService userDetailsService;
 
 
-    public LoginUserService(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, LoginUserRepository loginUserRepository, LibraryUserRepository libraryUserRepository) {
+    public LoginUserService(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, LoginUserRepository loginUserRepository, LibraryUserRepository libraryUserRepository, AuthenticationManager authenticationManager, CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.loginUserRepository = loginUserRepository;
         this.libraryUserRepository = libraryUserRepository;
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
     }
 
     public ResponseEntity<?> makeNewLoginUser(LoginUserDTO loginUserDTO) {
@@ -53,18 +62,6 @@ public class LoginUserService {
         return ResponseEntity.ok().body("User has been made");
     }
 
-
-    public String authenticateUser(LoginUser loginUser) {
-        LoginUser existingUser = loginUserRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
-
-        if (!passwordEncoder.matches(loginUser.getPassword(), existingUser.getPassword())) {
-            throw new RuntimeException("Nieprawidłowe hasło!");
-        }
-
-        return jwtUtil.generateToken(existingUser.getUsername(), List.of(existingUser.getRole().name()));
-    }
-
     public LoginUserDTO converLoginUserToDTO(LoginUser loginUser) {
         LoginUserDTO loginUserDTO = new LoginUserDTO();
         loginUserDTO.setUsername(loginUser.getUsername());
@@ -78,4 +75,15 @@ public class LoginUserService {
     }
 
 
+    public LoginUser convertDtoToLoginUser(LoginUserDTO loginUserDTO) {
+        LoginUser loginUser = new LoginUser();
+        loginUser.setUsername(loginUserDTO.getUsername());
+        loginUser.setPassword(passwordEncoder.encode(loginUserDTO.getPassword()));
+        loginUser.setLibraryUser(loginUserDTO.getLibraryUser());
+        loginUser.setRole(LoginUserRole.ROLE_USER);
+        loginUser.setId(loginUserDTO.getId());
+        loginUserRepository.save(loginUser);
+
+        return loginUser;
+    }
 }

@@ -10,151 +10,220 @@
 <div class="container mx-auto p-6">
     <h1 class="text-3xl font-bold mb-6">👤 Profil użytkownika</h1>
 
-    <!-- Formularz edycji danych -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 class="text-xl font-semibold mb-4">Edytuj dane</h2>
-        <form id="updateForm">
-            <label class="block text-gray-700">Imię:</label>
-            <input type="text" id="name" placeholder="Nowe imię" class="border p-2 rounded w-full mb-2">
-
-            <label class="block text-gray-700">Email:</label>
-            <input type="email" id="email" placeholder="Nowy email" class="border p-2 rounded w-full mb-4">
-
-            <button type="button" onclick="updateUser()" class="bg-blue-500 text-white px-4 py-2 rounded">Zapisz
-                zmiany
-            </button>
-        </form>
+        <h2 class="text-xl font-semibold mb-4">Twoje dane</h2>
+        <p><strong>Imię:</strong> <span id="displayName">Ładowanie...</span></p>
+        <p><strong>Email:</strong> <span id="displayEmail">Ładowanie...</span></p>
+        <p><strong>Stan konta:</strong> <span id="displayBalance">Ładowanie...</span></p>
     </div>
 
-    <!-- Formularz doładowania konta -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 class="text-xl font-semibold mb-4">💰 Doładuj konto</h2>
-        <label class="block text-gray-700">Kwota:</label>
-        <input type="number" id="amount" min="1" placeholder="Podaj kwotę" class="border p-2 rounded w-full mb-4">
-
-        <button onclick="transferCash()" class="bg-green-500 text-white px-4 py-2 rounded">Doładuj</button>
+        <h2 class="text-xl font-semibold mb-4">✉️ Zmień e-mail</h2>
+        <input type="email" id="newEmail" placeholder="Nowy e-mail" class="border p-2 rounded w-full mb-2">
+        <input type="password" id="emailPassword" placeholder="Potwierdź hasłem" class="border p-2 rounded w-full mb-4">
+        <button onclick="changeEmail()" class="bg-blue-500 text-white px-4 py-2 rounded">Zmień e-mail</button>
     </div>
 
-    <!-- Usunięcie konta -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold mb-4">🔑 Zmień hasło</h2>
+        <input type="password" id="oldPassword" placeholder="Obecne hasło" class="border p-2 rounded w-full mb-2">
+        <input type="password" id="newPassword" placeholder="Nowe hasło" class="border p-2 rounded w-full mb-2">
+        <input type="password" id="confirmNewPassword" placeholder="Potwierdź nowe hasło" class="border p-2 rounded w-full mb-4">
+        <button onclick="changePassword()" class="bg-yellow-500 text-white px-4 py-2 rounded">Zmień hasło</button>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold mb-4">📝 Zmień imię</h2>
+        <input type="text" id="newName" placeholder="Nowe imię" class="border p-2 rounded w-full mb-2">
+        <input type="password" id="namePassword" placeholder="Potwierdź hasłem" class="border p-2 rounded w-full mb-4">
+        <button onclick="changeName()" class="bg-green-500 text-white px-4 py-2 rounded">Zmień imię</button>
+    </div>
+
     <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-xl font-semibold mb-4">🚨 Usuń konto</h2>
+        <input type="password" id="deletePassword" placeholder="Podaj hasło" class="border p-2 rounded w-full mb-4">
         <button onclick="deleteAccount()" class="bg-red-500 text-white px-4 py-2 rounded">Usuń konto</button>
     </div>
+
+    <div class="text-center mt-10">
+        <button onclick="goToMenu()" class="bg-gray-700 text-white px-6 py-3 rounded hover:bg-gray-800 transition">
+            ⬅️ Powrót do menu
+        </button>
+    </div>
+
 </div>
 
 <script>
-    async function updateUser() {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("Musisz być zalogowany!");
-            return;
-        }
-
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-
-        const requestBody = {};
-        if (name) requestBody.name = name;
-        if (email) requestBody.email = email;
-
-        if (Object.keys(requestBody).length === 0) {
-            alert("Nie podano żadnych danych do zmiany!");
-            return;
-        }
-
+    async function fetchUserData() {
         try {
-            const response = await fetch("http://localhost:8080/user/updateUser", {
-                method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(requestBody)
+            const response = await fetch("http://localhost:8080/user/getUserInfo", {
+                method: "GET",
+                credentials: "include"
             });
 
-            if (response.ok) {
-                alert("Dane użytkownika zaktualizowane!");
-                location.reload();
-            } else {
-                const message = await response.text();
-                alert("Błąd: " + message);
+            if (!response.ok) {
+                throw new Error("Błąd pobierania danych użytkownika: " + response.status);
             }
+
+            const data = await response.json();
+
+            if (!data || !data.name || !data.email || data.accountBalance === undefined) {
+                throw new Error("Nieprawidłowe dane użytkownika");
+            }
+
+            document.getElementById("displayName").textContent = data.name;
+            document.getElementById("displayEmail").textContent = data.email;
+            document.getElementById("displayBalance").textContent = data.accountBalance.toFixed(2) + " zł";
+
         } catch (error) {
-            console.error(error);
-            alert("Wystąpił błąd!");
+            console.error("Błąd sieci:", error);
+            alert("Wystąpił błąd podczas pobierania danych użytkownika!");
         }
     }
 
-    async function transferCash() {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("Musisz być zalogowany!");
-            return;
-        }
+    async function changeEmail() {
+        const newEmail = document.getElementById("newEmail").value;
+        const password = document.getElementById("emailPassword").value;
 
-        const amount = document.getElementById("amount").value;
-        if (!amount || amount <= 0) {
-            alert("Podaj poprawną kwotę!");
+        if (!newEmail || !password) {
+            alert("Wypełnij oba pola (nowy e-mail i hasło)");
             return;
         }
 
         try {
-            const response = await fetch("http://localhost:8080/user/transferCashToAccount", {
+            const response = await fetch(`http://localhost:8080/user/changeEmail?password=${encodeURIComponent(password)}`, {
                 method: "PUT",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "text/plain"
                 },
-                body: new URLSearchParams({ammount: amount})
+                credentials: "include",
+                body: newEmail
             });
 
-            if (response.ok) {
-                alert("Saldo konta zostało doładowane!");
-                location.reload();
-            } else {
-                const message = await response.text();
-                alert("Błąd: " + message);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
             }
+
+            alert("✅ E-mail został zmieniony!");
+            fetchUserData();
+
         } catch (error) {
-            console.error(error);
-            alert("Wystąpił błąd!");
+            console.error("Błąd zmiany e-maila:", error);
+            alert("❌ Nie udało się zmienić e-maila: " + error.message);
+        }
+    }
+
+
+    async function changePassword() {
+        const oldPassword = document.getElementById("oldPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
+        const confirmNewPassword = document.getElementById("confirmNewPassword").value;
+
+        if (!oldPassword || !newPassword || !confirmNewPassword) {
+            alert("Uzupełnij wszystkie pola");
+            return;
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            alert("Nowe hasło i jego potwierdzenie muszą być takie same");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/user/changePassword?newPassword=${encodeURIComponent(newPassword)}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                credentials: "include",
+                body: oldPassword
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            alert("🔐 Hasło zostało zmienione!");
+
+        } catch (error) {
+            console.error("Błąd zmiany hasła:", error);
+            alert("❌ Nie udało się zmienić hasła: " + error.message);
         }
     }
 
     async function deleteAccount() {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("Musisz być zalogowany!");
+        const password = document.getElementById("deletePassword").value;
+
+        if (!password) {
+            alert("Podaj hasło");
             return;
         }
 
-        const password = prompt("Podaj swoje hasło, aby usunąć konto:");
-        if (!password) return;
+        if (!confirm("Czy na pewno chcesz usunąć konto? Tej akcji nie można cofnąć.")) {
+            return;
+        }
 
         try {
-            const response = await fetch("http://localhost:8080/user/delete", {
+            const response = await fetch(`http://localhost:8080/delete?password=${encodeURIComponent(password)}`, {
                 method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: new URLSearchParams({password})
+                credentials: "include"
             });
 
-            const message = await response.text();
-
-            if (response.ok) {
-                alert(message);
-                localStorage.removeItem("token");
-                window.location.href = "/Login";
-            } else {
-                alert("Błąd: " + message);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
             }
+
+            alert("🗑️ Konto zostało usunięte.");
+            window.location.href = "/login.html";
+
         } catch (error) {
-            console.error(error);
-            alert("Wystąpił błąd!");
+            console.error("Błąd usuwania konta:", error);
+            alert("❌ Nie udało się usunąć konta: " + error.message);
         }
     }
+    async function changeName() {
+        const newName = document.getElementById("newName").value;
+        const password = document.getElementById("namePassword").value;
+
+        if (!newName || !password) {
+            alert("Uzupełnij wszystkie pola");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/user/changeName?password=${encodeURIComponent(password)}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                credentials: "include",
+                body: newName
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            alert("✅ Imię zostało zmienione!");
+            fetchUserData();
+
+        } catch (error) {
+            console.error("Błąd zmiany imienia:", error);
+            alert("❌ Nie udało się zmienić imienia: " + error.message);
+        }
+    }
+
+    function goToMenu() {
+        window.location.href = "/Menu";
+    }
+
+    fetchUserData();
 </script>
+
+
 </body>
 </html>

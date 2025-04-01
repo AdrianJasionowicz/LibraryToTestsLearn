@@ -108,21 +108,67 @@ public class LibraryUserService {
         return ResponseEntity.ok().body("Konto zostało usunięte!");
     }
 
-    public void updateLibraryUser(UserDetails userDetails, LibraryUserDTO libraryUserDTO) {
+    public ResponseEntity<?> updateEmail(UserDetails userDetails,String email,String password) {
         String username = userDetails.getUsername();
         LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
-        LibraryUserDTO oldLibraryUserDTO = convertLibraryUserToLibraryUserDTO(loginUserDTO.getLibraryUser());
 
-        LibraryUser oldLibraryUser = libraryUserRepository.getReferenceById(oldLibraryUserDTO.getId());
-        if (libraryUserDTO.getName() != null && !libraryUserDTO.getName().isBlank()) {
-            oldLibraryUser.setName(libraryUserDTO.getName());
-        }
+        LibraryUser libraryUser = libraryUserRepository.findById(loginUserDTO.getLibraryUser().getId())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
 
-        if (libraryUserDTO.getEmail() != null && !libraryUserDTO.getEmail().isBlank()) {
-            oldLibraryUser.setEmail(libraryUserDTO.getEmail());
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            libraryUser.setEmail(email);
+            libraryUserRepository.save(libraryUser);
+            return ResponseEntity.ok().body("Done");
+        } else {
+            return ResponseEntity.badRequest().body("Blad");
         }
-       save(convertLibraryUserDTOToLibraryUser(oldLibraryUserDTO));
 
     }
 
+    public ResponseEntity<?> updateNameOfUser(UserDetails userDetails,String name,String password) {
+        String username = userDetails.getUsername();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+
+        LibraryUser libraryUser = libraryUserRepository.findById(loginUserDTO.getLibraryUser().getId())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
+
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            libraryUser.setName(name);
+            libraryUserRepository.save(libraryUser);
+            return ResponseEntity.ok().body("Done");
+        } else {
+            return ResponseEntity.badRequest().body("Blad");
+        }
+
+    }
+
+    public ResponseEntity<?> updatePassword(UserDetails userDetails,String oldPassword,String newPassword) {
+        String username = userDetails.getUsername();
+        LoginUser loginUser = loginUserRepository.getReferenceByUsername(username);
+
+        if (passwordEncoder.matches(oldPassword, userDetails.getPassword())) {
+            String newEncodedPassword = passwordEncoder.encode(newPassword);
+            loginUser.setPassword(newEncodedPassword);
+            loginUserRepository.save(loginUser);
+            return ResponseEntity.ok().body("Done");
+        } else {
+            return ResponseEntity.badRequest().body("Blad");
+        }
+
+    }
+
+    public ProfileUserView getProfile(UserDetails userDetails) {
+       String username = userDetails.getUsername();
+        ProfileUserView profileUserView = new ProfileUserView();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+
+
+        profileUserView.setId(loginUserDTO.getLibraryUser().getId());
+        profileUserView.setName(loginUserDTO.getLibraryUser().getName());
+        profileUserView.setEmail(loginUserDTO.getLibraryUser().getEmail());
+        profileUserView.setAccountBalance(loginUserDTO.getLibraryUser().getAccountBalance());
+
+
+        return profileUserView;
+    }
 }

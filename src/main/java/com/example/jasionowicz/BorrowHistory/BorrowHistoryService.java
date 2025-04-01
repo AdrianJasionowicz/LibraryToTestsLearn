@@ -90,10 +90,7 @@ public class BorrowHistoryService {
     
 
     public List<BorrowHistoryDTO> getAllLibraryUserBorrowedHistory(int userId) {
-        List<BorrowHistory> borrowedHistory = borrowHistoryRepository.findAllByUserId(userId);
-        System.out.println(borrowedHistory);
-        System.out.println(borrowHistoryRepository.findAllByUserId(userId));
-        System.out.println(borrowHistoryRepository.findAll());
+        List<BorrowHistory> borrowedHistory = borrowHistoryRepository.findAllByUserId(userId);;
         List<BorrowHistoryDTO> borrowHistoryDTOList = new ArrayList<>();
         for (BorrowHistory borrowHistory : borrowedHistory) {
            BorrowHistoryDTO borrowHistoryDTO = convertBorrowHistoryToDTO(borrowHistory);
