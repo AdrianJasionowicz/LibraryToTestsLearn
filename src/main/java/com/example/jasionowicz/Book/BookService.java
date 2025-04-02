@@ -76,7 +76,7 @@ public class BookService {
 
     @Transactional
     public boolean returnBook(Integer bookId, UserDetails userDetails) {
-        String username = (String) userDetails.getUsername();
+        String username = userDetails.getUsername();
         Book book = getBook(bookId);
         LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
 
@@ -143,7 +143,7 @@ public class BookService {
     }
 
     public List<BookDTO> getAllByAuthor(String author) {
-        List<Book> allBooksByAuthor = bookRepository.getAllByAuthor(author);
+        List<Book> allBooksByAuthor = bookRepository.findByAuthorContainingIgnoreCase(author);
         List<BookDTO> borrowedBooks = new ArrayList<>();
         for (Book book : allBooksByAuthor) {
             BookDTO bookDTO = convertBookToBookDTO(book);
@@ -154,7 +154,7 @@ public class BookService {
 
 
     public List<BookDTO> getAllByTitle(String title) {
-        List<BookDTO> books = bookRepository.getAllByTitle(title)
+        List<BookDTO> books = bookRepository.findByAuthorContainingIgnoreCase(title)
                 .stream()
                 .map(this::convertBookToBookDTO)
                 .collect(Collectors.toList());

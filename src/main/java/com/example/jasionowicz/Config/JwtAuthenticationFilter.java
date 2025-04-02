@@ -33,7 +33,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = extractTokenFromRequest(request);
@@ -43,31 +45,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username;
-        List<String> roles;
-
         try {
-            username = jwtUtil.extractUsername(token);
-            if (username == null) {
-                filterChain.doFilter(request, response);
-                return;
+            String username = jwtUtil.extractUsername(token);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                Claims claims = jwtUtil.extractAllClaims(token);
+                List<String> roles = extractRoles(claims);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                if (jwtUtil.validateToken(token, username)) {
+                    List<GrantedAuthority> authorities = roles.stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList());
+
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Nieprawidłowy token");
+                    return;
+                }
             }
-
-            Claims claims = jwtUtil.extractAllClaims(token);
-            Object rolesObject = claims.get("roles");
-
-
-            if (rolesObject instanceof List<?>) {
-                roles = ((List<?>) rolesObject).stream()
-                        .map(Object::toString)
-                        .collect(Collectors.toList());
-            } else if (rolesObject instanceof String strRole) {
-                roles = List.of(strRole);
-            } else {
-                roles = List.of();
-            }
-
-
         } catch (ExpiredJwtException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token wygasł");
             return;
@@ -76,27 +77,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            List<GrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-
-
-            if (jwtUtil.validateToken(token, username)) {
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-
-            } else {
-
-            }
-        }
-
         filterChain.doFilter(request, response);
     }
+
+    private List<String> extractRoles(Claims claims) {
+        Object rolesObj = claims.get("roles");
+        if (rolesObj instanceof List<?> list) {
+            return list.stream().map(Object::toString).toList();
+        } else if (rolesObj instanceof String str) {
+            return List.of(str);
+        }
+        return List.of();
+    }
+
 
     private String extractTokenFromRequest(HttpServletRequest request) {
         if (request.getCookies() != null) {

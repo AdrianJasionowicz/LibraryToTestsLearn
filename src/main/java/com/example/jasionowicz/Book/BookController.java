@@ -99,12 +99,12 @@
         }
 
 
-        @GetMapping("/{author}/getAll")
+        @GetMapping("/search/getByAuthor/{author}")
         public ResponseEntity<List<BookDTO>> getAllBooksByAuthor(@PathVariable String author) {
             return ResponseEntity.ok().body(bookService.getAllByAuthor(author));
         }
 
-        @GetMapping("/{bookName}/getByTitle")
+        @GetMapping("/search/getByTitle/{bookName}")
         @ResponseBody
         public ResponseEntity<List<BookDTO>> getAllBooksByName(@PathVariable String bookName) {
             return ResponseEntity.ok().body(bookService.getAllByTitle(bookName));

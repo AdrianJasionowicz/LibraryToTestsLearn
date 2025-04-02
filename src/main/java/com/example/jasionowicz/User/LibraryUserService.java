@@ -25,7 +25,7 @@ public class LibraryUserService {
     private final LibraryUserRepository libraryUserRepository;
     private final BookService bookService;
     private final LoginUserService loginUserService;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public LibraryUserService(LibraryUserRepository libraryUserRepository, BookService bookService, LoginUserRepository loginUserRepository, PasswordEncoder passwordEncoder, LoginUserService loginUserService) {
         this.libraryUserRepository = libraryUserRepository;

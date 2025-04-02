@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class MainControllerRest {
     private final LoginUserService loginUserService;
     private final PasswordEncoder passwordEncoder;
-    private JwtUtil jwtUtil;
-    private AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
 
 

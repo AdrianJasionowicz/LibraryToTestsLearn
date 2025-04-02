@@ -131,9 +131,9 @@
         let url = "http://localhost:8080/books/getAll";
 
         if (query && filterType === 'title') {
-            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByTitle`;
+            url = `http://localhost:8080/books/search/getByTitle/${encodeURIComponent(query)}`;
         } else if (query && filterType === 'author') {
-            url = `http://localhost:8080/books/${encodeURIComponent(query)}/getByAuthor`;
+            url = `http://localhost:8080/books/search/getByAuthor/${encodeURIComponent(query)}`;
         }
 
         const response = await fetchWithAuth(url);
