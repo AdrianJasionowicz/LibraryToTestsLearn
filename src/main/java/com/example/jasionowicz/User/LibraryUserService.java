@@ -2,6 +2,17 @@ package com.example.jasionowicz.User;
 
 import com.example.jasionowicz.Book.BookDTO;
 import com.example.jasionowicz.Book.BookService;
+import com.example.jasionowicz.Config.LoginBase.LoginUser;
+import com.example.jasionowicz.Config.LoginBase.LoginUserDTO;
+import com.example.jasionowicz.Config.LoginBase.LoginUserRepository;
+import com.example.jasionowicz.Config.LoginBase.LoginUserService;
+import jakarta.validation.constraints.Null;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,41 +21,27 @@ import java.util.stream.Collectors;
 
 @Service
 public class LibraryUserService {
-    private LibraryUserRepository libraryUserRepository;
+    private final LoginUserRepository loginUserRepository;
+    private final LibraryUserRepository libraryUserRepository;
     private final BookService bookService;
+    private final LoginUserService loginUserService;
+    private final PasswordEncoder passwordEncoder;
 
-    public LibraryUserService(LibraryUserRepository libraryUserRepository, BookService bookService) {
+    public LibraryUserService(LibraryUserRepository libraryUserRepository, BookService bookService, LoginUserRepository loginUserRepository, PasswordEncoder passwordEncoder, LoginUserService loginUserService) {
         this.libraryUserRepository = libraryUserRepository;
         this.bookService = bookService;
+        this.loginUserRepository = loginUserRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.loginUserService = loginUserService;
     }
 
-    public LibraryUser save(LibraryUser libraryUser) {
-        return libraryUserRepository.save(libraryUser);
+    public void save(LibraryUser libraryUser) {
+         libraryUserRepository.save(libraryUser);
     }
 
     public LibraryUser getLibraryUser(Integer id) {
         return libraryUserRepository.getReferenceById(id);
     }
-
-    public List<LibraryUser> getLibraryUsers() {
-        return libraryUserRepository.findAll();
-    }
-
-    public void deleteLibraryUser(Integer id) {
-        libraryUserRepository.deleteById(id);
-    }
-
-    public void updateLibraryUser(Integer id, LibraryUser libraryUser) {
-        LibraryUser oldLibraryUser = libraryUserRepository.getReferenceById(id);
-        oldLibraryUser.setName(libraryUser.getName());
-        oldLibraryUser.setEmail(libraryUser.getEmail());
-    }
-
-    public void createLibraryUser(LibraryUser libraryUser) {
-
-        libraryUserRepository.save(libraryUser);
-    }
-
 
     public LibraryUserDTO getLibraryUserByEmail(String email) {
         LibraryUser libraryUser = libraryUserRepository.findByEmail(email);
@@ -72,18 +69,106 @@ public class LibraryUserService {
         return libraryUser;
     }
 
+
+
     public List<BookDTO> getBorrowedBooks(Integer userId) {
         return new ArrayList<>(bookService.getBooksByUserId(userId));
     }
 
-    public void setAccountBalance(int id, int accountBalance) {
-        LibraryUserDTO libraryUserDTO = convertLibraryUserToLibraryUserDTO(libraryUserRepository.findById(id).orElseThrow(() -> new RuntimeException("User with id " + id + " not found")));
+    public ResponseEntity setAccountBalance(UserDetails userDetails, int accountBalance) {
+        String username = userDetails.getUsername();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+        LibraryUserDTO libraryUserDTO = convertLibraryUserToLibraryUserDTO(loginUserDTO.getLibraryUser());
         libraryUserDTO.setAccountBalance(accountBalance);
-        LibraryUser libraryUser = new LibraryUser();
-        libraryUser = convertLibraryUserDTOToLibraryUser(libraryUserDTO);
-        libraryUserRepository.save(libraryUser);
-        ///  WTF XDDDDDDDDDDD
+        libraryUserRepository.save(convertLibraryUserDTOToLibraryUser(libraryUserDTO));
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
+    public ResponseEntity<String> deleteLibraryUser(UserDetails userDetails, String password) {
+        String username = userDetails.getUsername();
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Nieprawidłowe hasło!");
+        }
+        LoginUser loginUser = loginUserRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
 
+        if (!passwordEncoder.matches(password, loginUser.getPassword())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Nieprawidłowe hasło!");
+        }
+        LibraryUser libraryUser = loginUser.getLibraryUser();
+        if (libraryUser == null) {
+            return ResponseEntity.badRequest().body("Brak powiązanego konta bibliotecznego!");
+        }
+        if (libraryUser.getAccountBalance() < 0) {
+            return ResponseEntity.badRequest().body("Twoje saldo jest ujemne, nie możesz usunąć konta!");
+        }
+        libraryUserRepository.delete(libraryUser);
+        loginUserRepository.delete(loginUser);
+        return ResponseEntity.ok().body("Konto zostało usunięte!");
+    }
+
+    public ResponseEntity<?> updateEmail(UserDetails userDetails,String email,String password) {
+        String username = userDetails.getUsername();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+
+        LibraryUser libraryUser = libraryUserRepository.findById(loginUserDTO.getLibraryUser().getId())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
+
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            libraryUser.setEmail(email);
+            libraryUserRepository.save(libraryUser);
+            return ResponseEntity.ok().body("Done");
+        } else {
+            return ResponseEntity.badRequest().body("Blad");
+        }
+
+    }
+
+    public ResponseEntity<?> updateNameOfUser(UserDetails userDetails,String name,String password) {
+        String username = userDetails.getUsername();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+
+        LibraryUser libraryUser = libraryUserRepository.findById(loginUserDTO.getLibraryUser().getId())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
+
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            libraryUser.setName(name);
+            libraryUserRepository.save(libraryUser);
+            return ResponseEntity.ok().body("Done");
+        } else {
+            return ResponseEntity.badRequest().body("Blad");
+        }
+
+    }
+
+    public ResponseEntity<?> updatePassword(UserDetails userDetails,String oldPassword,String newPassword) {
+        String username = userDetails.getUsername();
+        LoginUser loginUser = loginUserRepository.getReferenceByUsername(username);
+
+        if (passwordEncoder.matches(oldPassword, userDetails.getPassword())) {
+            String newEncodedPassword = passwordEncoder.encode(newPassword);
+            loginUser.setPassword(newEncodedPassword);
+            loginUserRepository.save(loginUser);
+            return ResponseEntity.ok().body("Done");
+        } else {
+            return ResponseEntity.badRequest().body("Blad");
+        }
+
+    }
+
+    public ProfileUserView getProfile(UserDetails userDetails) {
+       String username = userDetails.getUsername();
+        ProfileUserView profileUserView = new ProfileUserView();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+
+
+        profileUserView.setId(loginUserDTO.getLibraryUser().getId());
+        profileUserView.setName(loginUserDTO.getLibraryUser().getName());
+        profileUserView.setEmail(loginUserDTO.getLibraryUser().getEmail());
+        profileUserView.setAccountBalance(loginUserDTO.getLibraryUser().getAccountBalance());
+
+
+        return profileUserView;
+    }
 }

@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public class BorrowHistoryService {
 
-    private BorrowHistoryRepository borrowHistoryRepository;
-    private LibraryUserService libraryUserService;
-    private BookService bookService;
+    private final BorrowHistoryRepository borrowHistoryRepository;
+    private final LibraryUserService libraryUserService;
+    private final BookService bookService;
 
 
     public BorrowHistoryService(BorrowHistoryRepository borrowHistoryRepository, LibraryUserService libraryUserService, BookService bookService) {
@@ -65,8 +65,7 @@ public class BorrowHistoryService {
         if (ammount < 0) {
            LibraryUserDTO libraryUserDTO =  libraryUserService.convertLibraryUserToLibraryUserDTO(libraryUserService.getLibraryUser(userId));
             libraryUserDTO.setAccountBalance(ammount);
-            LibraryUser libraryUser = libraryUserService.convertLibraryUserDTOToLibraryUser(libraryUserDTO);
-            libraryUserService.save(libraryUser);
+            libraryUserService.save(libraryUserService.convertLibraryUserDTOToLibraryUser(libraryUserDTO));
         }
     }
 
@@ -92,9 +91,6 @@ public class BorrowHistoryService {
 
     public List<BorrowHistoryDTO> getAllLibraryUserBorrowedHistory(int userId) {
         List<BorrowHistory> borrowedHistory = borrowHistoryRepository.findAllByUserId(userId);
-        System.out.println(borrowedHistory);
-        System.out.println(borrowHistoryRepository.findAllByUserId(userId));
-        System.out.println(borrowHistoryRepository.findAll());
         List<BorrowHistoryDTO> borrowHistoryDTOList = new ArrayList<>();
         for (BorrowHistory borrowHistory : borrowedHistory) {
            BorrowHistoryDTO borrowHistoryDTO = convertBorrowHistoryToDTO(borrowHistory);

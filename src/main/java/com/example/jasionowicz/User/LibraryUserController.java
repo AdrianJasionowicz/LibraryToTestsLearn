@@ -1,10 +1,11 @@
 package com.example.jasionowicz.User;
 
 import com.example.jasionowicz.Book.BookDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +23,64 @@ private final LibraryUserService libraryUserService;
     public ResponseEntity<List<BookDTO>> getBorrowedBooks(@PathVariable Integer id) {
         List<BookDTO> borrowedBooks = libraryUserService.getBorrowedBooks(id);
         return ResponseEntity.ok(borrowedBooks);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String password) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Brak autoryzacji");
+        }
+        libraryUserService.deleteLibraryUser(userDetails,password);
+
+        return ResponseEntity.ok("Konto zostało usunięte!");
+    }
+
+    @PutMapping("/user/changeEmail")
+    public ResponseEntity<String> updateUser(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String email, @RequestParam String password) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak autoryzacji");
+        }
+        libraryUserService.updateEmail(userDetails,email,password);
+
+        return ResponseEntity.ok().body("Zmieniono Dane");
+    }
+
+    @PutMapping("/user/changeName")
+    public ResponseEntity<?> updateName(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String name, @RequestParam String password) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak autoryzacji");
+        }
+        return libraryUserService.updateNameOfUser(userDetails, name, password);
+    }
+
+    @PutMapping("/user/changePassword")
+    public ResponseEntity<String> updatePassword(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String oldPassword, @RequestParam String newPassword) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak autoryzacji");
+        }
+        libraryUserService.updatePassword(userDetails,oldPassword,newPassword);
+
+        return ResponseEntity.ok().body("Zmieniono Dane");
+    }
+
+    @PutMapping("/transferCashToAccount")
+    public ResponseEntity<String> transferUpYourAccount(@AuthenticationPrincipal UserDetails userDetails, Integer ammount) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak autoryzacji");
+        }
+        if (ammount < 0) {
+            return ResponseEntity.badRequest().body("Brak zasilenia");
+        }
+        libraryUserService.setAccountBalance(userDetails,ammount);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user/getUserInfo")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body("Brak uzytkownika");
+        }
+       return ResponseEntity.ok(libraryUserService.getProfile(userDetails));
     }
 
 }

@@ -1,31 +1,36 @@
 package com.example.jasionowicz.Book;
 
 import com.example.jasionowicz.BorrowHistory.BorrowHistoryService;
+import com.example.jasionowicz.Config.LoginBase.LoginUserDTO;
+import com.example.jasionowicz.Config.LoginBase.LoginUserService;
 import com.example.jasionowicz.User.LibraryUser;
-import com.example.jasionowicz.User.LibraryUserRepository;
+import com.example.jasionowicz.User.LibraryUserDTO;
+import com.example.jasionowicz.User.LibraryUserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class BookService {
 
 
-    private BookRepository bookRepository;
-    private LibraryUserRepository libraryUserRepository;
+    private final BookRepository bookRepository;
     @Autowired
     private BorrowHistoryService borrowHistoryService;
+    private final LoginUserService loginUserService;
 
-    public BookService(BookRepository bookRepository, LibraryUserRepository libraryUserRepository) {
+    public BookService(BookRepository bookRepository, LoginUserService loginUserService) {
         this.bookRepository = bookRepository;
-        this.libraryUserRepository = libraryUserRepository;
+        this.loginUserService = loginUserService;
     }
 
     @Transactional
@@ -50,26 +55,46 @@ public class BookService {
     }
 
     @Transactional
-    public boolean borrowBook(Integer bookId, Integer userId) {
-        Book book = getBook(bookId);
-        LibraryUser user = libraryUserRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public void borrowBook(Integer bookId, UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+        LibraryUser libraryUser = loginUserDTO.getLibraryUser();
 
-        if (book != null && user != null && book.isAvailable()) {
-            book.setIsAvailable(false);
-            book.setBorrowedByUserId(userId);
-            book.increaseBorrowCount();
-            bookRepository.save(book);
-            borrowHistoryService.recordNewBorrow(bookId, userId);
-            return true;
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono książki"));
+
+        if (!book.isAvailable()) {
+            throw new RuntimeException("Książka jest już wypożyczona!");
         }
-        return false;
+
+        book.setIsAvailable(false);
+        book.setLibraryUser(libraryUser);
+        book.setBorrowedByUserId(libraryUser.getId());
+        bookRepository.save(book);
     }
 
-    @Transactional
-    public boolean returnBook(Integer bookId) {
-        Book book = getBook(bookId);
-        Integer userId = book.getBorrowedByUserId();
 
+    @Transactional
+    public boolean returnBook(Integer bookId, UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Book book = getBook(bookId);
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+
+        if (book.isAvailable()) {
+            throw new RuntimeException("Ta książka nie jest wypożyczona!");
+        }
+
+        if (loginUserDTO == null || loginUserDTO.getLibraryUser() == null) {
+            throw new RuntimeException("Użytkownik nie został znaleziony lub nie ma powiązanego LibraryUser");
+        }
+        Integer userId = book.getBorrowedByUserId();
+        if (userId == null) {
+            throw new RuntimeException("Brak informacji o użytkowniku, który wypożyczył książkę!");
+        }
+
+        if (!Objects.equals(loginUserDTO.getLibraryUser().getId(), userId)) {
+            throw new RuntimeException("Nie masz uprawnień do zwrotu tej książki!");
+        }
         book.setIsAvailable(true);
         book.setBorrowedByUserId(null);
         borrowHistoryService.stopRecordBorrow(bookId, userId);
@@ -118,7 +143,7 @@ public class BookService {
     }
 
     public List<BookDTO> getAllByAuthor(String author) {
-        List<Book> allBooksByAuthor = bookRepository.getAllByAuthor(author);
+        List<Book> allBooksByAuthor = bookRepository.findByAuthorContainingIgnoreCase(author);
         List<BookDTO> borrowedBooks = new ArrayList<>();
         for (Book book : allBooksByAuthor) {
             BookDTO bookDTO = convertBookToBookDTO(book);
@@ -127,25 +152,14 @@ public class BookService {
         return borrowedBooks;
     }
 
-//    public List<BookDTO> getAllByTitle(String title) {
-//        String formattedBookName = title.replace("-", " ");
-//        List<Book> allBooksByTitle = bookRepository.getAllByTitle(formattedBookName);
-//        List<BookDTO> borrowedBooks = new ArrayList<>();
-//        for (Book book : allBooksByTitle) {
-//            BookDTO bookDTO = convertBookToBookDTO(book);
-//            borrowedBooks.add(bookDTO);
-//        }
-//        return borrowedBooks;
-//    }
 
     public List<BookDTO> getAllByTitle(String title) {
-        String formattedBookName = title.replace("-", " ");
-        List<BookDTO> books = bookRepository.getAllByTitle(formattedBookName)
+        List<BookDTO> books = bookRepository.findByAuthorContainingIgnoreCase(title)
                 .stream()
                 .map(this::convertBookToBookDTO)
                 .collect(Collectors.toList());
         if (books.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found with title: " + formattedBookName);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found with title: " + title);
         }
         return books;
 

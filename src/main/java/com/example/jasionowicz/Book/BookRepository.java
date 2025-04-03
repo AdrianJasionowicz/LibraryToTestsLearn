@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> findAllByBorrowedByUserId(Integer borrowedByUserId);
-    List<Book> getAllByAuthor(String author);
-    List<Book> getAllByTitle(String title);
+    List<Book> findByTitleContainingIgnoreCase(String title);
+    List<Book> findByAuthorContainingIgnoreCase(String author);
 
 }
