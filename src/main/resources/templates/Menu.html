@@ -9,21 +9,23 @@
 <body class="bg-gray-100 text-gray-900">
 
 <div class="container mx-auto p-6">
-    <!-- Nawigacja -->
     <div class="flex justify-between mb-6">
         <h1 class="text-4xl font-bold">📚 Biblioteka</h1>
         <div id="auth-buttons" class="flex items-center gap-2">
-            <!-- Koszyk -->
+
+            <a id="admin-panel" href="/admin-panel"
+               class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+                🛠️ Panel Kontroli
+            </a>
+
             <a href="/CartMenu" class="bg-yellow-500 text-white px-4 py-2 rounded">
                 🛒 Koszyk <span id="cart-count" class="bg-red-500 text-white px-2 py-1 rounded-full text-sm">0</span>
             </a>
 
-            <!-- Historia wypożyczeń -->
             <a href="/borrow-history" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition">
                 📖 Historia wypożyczeń
             </a>
 
-            <!-- Profil i Wyloguj -->
             <div id="auth-links" class="flex items-center gap-2">
                 <button onclick="goToProfile()" class="bg-gray-500 text-white px-4 py-2 rounded">
                     👤 Profil
@@ -72,6 +74,12 @@
 
             const data = await response.json();
             userRoles = data.roles || [];
+
+            const adminPanel = document.getElementById("admin-panel");
+            if (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_MODERATOR")) {
+                adminPanel.classList.remove("hidden");
+            }
+
             console.log("🔑 Role użytkownika:", userRoles);
             return true;
         } catch (e) {

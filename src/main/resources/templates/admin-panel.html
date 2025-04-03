@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>🛠️ Panel Kontroli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+<h1 class="text-4xl font-bold mb-6">🛠️ Panel Kontroli</h1>
+
+<!-- 👥 Zarządzanie użytkownikami -->
+<div class="bg-white p-6 rounded shadow mb-8">
+    <h2 class="text-2xl font-semibold mb-4">👥 Użytkownicy</h2>
+    <ul id="user-list" class="space-y-4"></ul>
+</div>
+
+<!-- ➕ Dodawanie książki -->
+<div class="bg-white p-6 rounded shadow mb-8">
+    <h2 class="text-2xl font-semibold mb-4">➕ Dodaj książkę</h2>
+    <div class="flex flex-col gap-4">
+        <input id="book-title" class="border p-2 rounded" placeholder="Tytuł książki">
+        <input id="book-author" class="border p-2 rounded" placeholder="Autor książki">
+        <label class="inline-flex items-center">
+            <input type="checkbox" id="book-available" class="mr-2"> Dostępna
+        </label>
+        <button onclick="addBook()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+            💾 Dodaj książkę
+        </button>
+    </div>
+</div>
+
+<!-- 📚 Accordion - Lista książek -->
+<div class="bg-white p-6 rounded shadow">
+    <button onclick="toggleBookList()" class="text-2xl font-semibold flex items-center justify-between w-full">
+        📚 Wszystkie książki
+        <span id="arrow" class="transform transition-transform duration-300">▼</span>
+    </button>
+    <ul id="book-list" class="space-y-4 mt-4 hidden"></ul>
+</div>
+
+<script>
+    async function fetchWithAuth(url, options = {}) {
+        return fetch(url, {
+            ...options,
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                ...options.headers
+            }
+        });
+    }
+
+    async function addBook() {
+        const title = document.getElementById("book-title").value;
+        const author = document.getElementById("book-author").value;
+        const isAvailable = document.getElementById("book-available").checked;
+
+        const body = JSON.stringify({ title, author, available: isAvailable });
+
+        const response = await fetchWithAuth("http://localhost:8080/books", {
+            method: "POST",
+            body: body
+        });
+
+        if (response.ok) {
+            alert("📘 Książka dodana!");
+            fetchBooks();
+            expandBookList(); // rozwijamy listę po dodaniu
+        } else {
+            alert("❌ Błąd dodawania książki");
+        }
+    }
+
+    async function deleteBook(id) {
+        const confirmed = confirm("Na pewno chcesz usunąć tę książkę?");
+        if (!confirmed) return;
+
+        const response = await fetchWithAuth(`http://localhost:8080/books/${id}`, {
+            method: "DELETE"
+        });
+
+        if (response.ok) {
+            alert("🗑️ Książka usunięta");
+            fetchBooks();
+        } else {
+            alert("❌ Nie udało się usunąć książki");
+        }
+    }
+
+    async function changeUserRole(userId, newRole) {
+        const response = await fetchWithAuth(`http://localhost:8080/user/${userId}/role`, {
+            method: "PATCH",
+            body: JSON.stringify({ role: newRole })
+        });
+
+        if (response.ok) {
+            alert("✅ Rola użytkownika zaktualizowana!");
+            fetchUsers();
+        } else {
+            alert("❌ Błąd zmiany roli");
+        }
+    }
+
+    async function fetchBooks() {
+        const response = await fetchWithAuth("http://localhost:8080/books/getAll");
+        const books = await response.json();
+
+        document.getElementById("book-list").innerHTML = books.map(book => `
+            <li class="bg-gray-100 p-4 rounded flex justify-between items-center">
+                <div>
+                    <strong>${book.title}</strong> - ${book.author}
+                    ${book.isAvailable ? "📗" : "📕"}
+                </div>
+                <button onclick="deleteBook(${book.id})"
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                    Usuń
+                </button>
+            </li>
+        `).join('');
+    }
+
+    async function fetchUsers() {
+        const response = await fetchWithAuth("http://localhost:8080/user/getAllLibraryUsers");
+        const users = await response.json();
+
+        document.getElementById("user-list").innerHTML = users.map(user => `
+            <li class="bg-gray-100 p-4 rounded flex justify-between items-center">
+                <div>
+                    <strong>${user.username}</strong><br>
+                    <span class="text-sm text-gray-600">ID: ${user.id} | UID: ${user.libraryUserId}</span><br>
+                    <span class="text-sm">👤 ${user.name}</span><br>
+                    <span class="text-sm">📧 ${user.email}</span><br>
+                    <span class="text-sm">🔐 Rola: ${user.role?.role || 'brak'}</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="changeUserRole(${user.id}, 'ROLE_USER')"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                        Usuń moda
+                    </button>
+                    <button onclick="changeUserRole(${user.id}, 'ROLE_MODERATOR')"
+                            class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded">
+                        Nadaj moda
+                    </button>
+                </div>
+            </li>
+        `).join('');
+    }
+
+    function toggleBookList() {
+        const list = document.getElementById("book-list");
+        const arrow = document.getElementById("arrow");
+        list.classList.toggle("hidden");
+        arrow.classList.toggle("rotate-180");
+    }
+
+    function expandBookList() {
+        document.getElementById("book-list").classList.remove("hidden");
+        document.getElementById("arrow").classList.remove("rotate-180");
+    }
+
+    window.onload = () => {
+        fetchBooks();
+        fetchUsers();
+    };
+</script>
+</body>
+</html>

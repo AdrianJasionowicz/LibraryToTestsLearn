@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .headers(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Register", "/Login", "/auth/register/**", "/auth/login/**", "/auth/register", "/auth/login").permitAll()
-                        .requestMatchers("/books/moderator/return/**", "/books/moderator/return/").hasAnyAuthority("ROLE_MODERATOR", "ROLE_ADMIN")
+                        .requestMatchers("/books/moderator/return/**", "/books/moderator/return/","/admin-panel").hasAnyAuthority("ROLE_MODERATOR", "ROLE_ADMIN")
 
                         .requestMatchers("/Profile", "/Profile/**", "/static/**", "/Menu", "/admin/**", "/books/**", "/books/", "/CartMenu", "/CartMenu/**", "/cart/order", "/cart", "/cart/**", "/auth/getRole","/user/getUserInfo","/user/**","/borrow-history","/getBorrowHistory/**","/books/search/**","/books/search/getByTitle/").authenticated()
 

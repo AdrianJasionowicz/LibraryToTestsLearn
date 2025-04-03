@@ -86,4 +86,18 @@ public class LoginUserService {
 
         return loginUser;
     }
+
+    public LoginUserViewForAdmin getLoginUserViewForAdmin(LoginUser loginUser) {
+        LoginUserViewForAdmin loginUserViewForAdmin = new LoginUserViewForAdmin();
+        loginUserViewForAdmin.setUsername(loginUser.getUsername());
+        loginUserViewForAdmin.setId(loginUser.getId());
+        loginUserViewForAdmin.setRole(LoginUserRole.ROLE_ADMIN);
+        loginUserViewForAdmin.setLibraryUserId(loginUser.getLibraryUser().getId());
+        loginUserViewForAdmin.setUsername(loginUser.getUsername());
+        loginUserViewForAdmin.setEmail(loginUser.getLibraryUser().getEmail());
+        loginUserViewForAdmin.setName(loginUser.getLibraryUser().getName());
+
+
+        return loginUserViewForAdmin;
+    }
 }

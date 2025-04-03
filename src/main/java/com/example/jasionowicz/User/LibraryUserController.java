@@ -1,8 +1,11 @@
 package com.example.jasionowicz.User;
 
 import com.example.jasionowicz.Book.BookDTO;
+import com.example.jasionowicz.Config.LoginBase.LoginUserRole;
+import com.example.jasionowicz.Config.LoginBase.LoginUserViewForAdmin;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -83,4 +86,19 @@ private final LibraryUserService libraryUserService;
        return ResponseEntity.ok(libraryUserService.getProfile(userDetails));
     }
 
+        @GetMapping("/user/getAllLibraryUsers")
+      @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
+        public ResponseEntity<List<LoginUserViewForAdmin>> getAllLibraryUsers() {
+
+        return libraryUserService.getAllLibraryUsers();
+        }
+
+
+
+    @PatchMapping("/user/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> setAuthority(@PathVariable Integer id,
+                                          @RequestBody LoginUserRole loginUserRole) {
+        return libraryUserService.setUserAuthorityById(id, loginUserRole);
+    }
 }

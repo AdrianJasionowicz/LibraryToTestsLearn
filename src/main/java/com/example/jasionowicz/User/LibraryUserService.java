@@ -2,10 +2,7 @@ package com.example.jasionowicz.User;
 
 import com.example.jasionowicz.Book.BookDTO;
 import com.example.jasionowicz.Book.BookService;
-import com.example.jasionowicz.Config.LoginBase.LoginUser;
-import com.example.jasionowicz.Config.LoginBase.LoginUserDTO;
-import com.example.jasionowicz.Config.LoginBase.LoginUserRepository;
-import com.example.jasionowicz.Config.LoginBase.LoginUserService;
+import com.example.jasionowicz.Config.LoginBase.*;
 import jakarta.validation.constraints.Null;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -170,5 +167,26 @@ public class LibraryUserService {
 
 
         return profileUserView;
+    }
+
+    public ResponseEntity<List<LoginUserViewForAdmin>> getAllLibraryUsers() {
+        List<LoginUserViewForAdmin> users = new ArrayList<>();
+        List<LoginUser> loginUsers = loginUserRepository.findAll();
+        for (LoginUser loginUser : loginUsers) {
+           users.add(loginUserService.getLoginUserViewForAdmin(loginUser));
+
+        }
+        return users.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(users);
+    }
+
+    public ResponseEntity<?> setUserAuthorityById(Integer id, LoginUserRole loginUserRole) {
+        LibraryUser libraryUser = libraryUserRepository.getReferenceById(id);
+        LoginUser loginUser = loginUserRepository.findByLibraryUser(libraryUser);
+        if (loginUser != null) {
+            loginUser.setRole(loginUserRole);
+            libraryUserRepository.save(libraryUser);
+            return ResponseEntity.ok().body("Zmieniono dostep użytkownikowi");
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -14,9 +14,8 @@ public class BookDTO {
     private String title;
     private String author;
     private Boolean isAvailable;
-    private Integer borrowedByUserId;
     private int borrowCount;
-    private LibraryUser libraryUser;
+    private LibraryUser libraryUserDTO;
 
 
 

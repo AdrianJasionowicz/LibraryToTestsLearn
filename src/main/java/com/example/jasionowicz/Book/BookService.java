@@ -1,12 +1,19 @@
 package com.example.jasionowicz.Book;
 
 import com.example.jasionowicz.BorrowHistory.BorrowHistoryService;
+import com.example.jasionowicz.Cart.BooksCart;
+import com.example.jasionowicz.Cart.BooksCartRepository;
+import com.example.jasionowicz.Config.LoginBase.LoginUser;
 import com.example.jasionowicz.Config.LoginBase.LoginUserDTO;
+import com.example.jasionowicz.Config.LoginBase.LoginUserRepository;
 import com.example.jasionowicz.Config.LoginBase.LoginUserService;
 import com.example.jasionowicz.User.LibraryUser;
 import com.example.jasionowicz.User.LibraryUserDTO;
+import com.example.jasionowicz.User.LibraryUserRepository;
 import com.example.jasionowicz.User.LibraryUserService;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.tomcat.jni.Library;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,10 +34,16 @@ public class BookService {
     @Autowired
     private BorrowHistoryService borrowHistoryService;
     private final LoginUserService loginUserService;
+    private BooksCartRepository booksCartRepository;
+    @Autowired
+    private LibraryUserRepository libraryUserRepository;
+    private LoginUserRepository loginUserRepository;
 
-    public BookService(BookRepository bookRepository, LoginUserService loginUserService) {
+    public BookService(BookRepository bookRepository, LoginUserService loginUserService, BooksCartRepository booksCartRepository, LoginUserRepository loginUserRepository) {
         this.bookRepository = bookRepository;
         this.loginUserService = loginUserService;
+        this.booksCartRepository = booksCartRepository;
+        this.loginUserRepository = loginUserRepository;
     }
 
     @Transactional
@@ -63,13 +76,12 @@ public class BookService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono książki"));
 
-        if (!book.isAvailable()) {
+        if (!book.getIsAvailable()) {
             throw new RuntimeException("Książka jest już wypożyczona!");
         }
 
         book.setIsAvailable(false);
         book.setLibraryUser(libraryUser);
-        book.setBorrowedByUserId(libraryUser.getId());
         bookRepository.save(book);
     }
 
@@ -80,28 +92,42 @@ public class BookService {
         Book book = getBook(bookId);
         LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
 
-        if (book.isAvailable()) {
+        if (book.getIsAvailable()) {
             throw new RuntimeException("Ta książka nie jest wypożyczona!");
         }
 
-        if (loginUserDTO == null || loginUserDTO.getLibraryUser() == null) {
-            throw new RuntimeException("Użytkownik nie został znaleziony lub nie ma powiązanego LibraryUser");
-        }
-        Integer userId = book.getBorrowedByUserId();
-        if (userId == null) {
-            throw new RuntimeException("Brak informacji o użytkowniku, który wypożyczył książkę!");
-        }
+        boolean isAdminOrMod = userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_MODERATOR"));
 
-        if (!Objects.equals(loginUserDTO.getLibraryUser().getId(), userId)) {
+        LibraryUser userFromDTO = loginUserDTO.getLibraryUser();
+        LibraryUser bookOwner = book.getLibraryUser();
+
+        if (!isAdminOrMod && !bookOwner.getId().equals(userFromDTO.getId())) {
             throw new RuntimeException("Nie masz uprawnień do zwrotu tej książki!");
         }
+
+        borrowHistoryService.stopRecordBorrow(bookId, bookOwner.getId());
+
+        if (book.getCarts() != null) {
+            for (BooksCart cart : new ArrayList<>(book.getCarts())) {
+                cart.getBooks().remove(book);
+                booksCartRepository.save(cart);
+            }
+        }
+
         book.setIsAvailable(true);
-        book.setBorrowedByUserId(null);
-        borrowHistoryService.stopRecordBorrow(bookId, userId);
+        book.setLibraryUser(null);
         bookRepository.save(book);
+
+        if (userFromDTO.getLoginUser() == null) {
+            LoginUser user = loginUserRepository.findByUsername(username).get();
+            userFromDTO.setLoginUser(user);
+            libraryUserRepository.save(userFromDTO);
+        }
 
         return true;
     }
+
 
     public BookDTO convertBookToBookDTO(Book book) {
         BookDTO bookDTO = new BookDTO();
@@ -109,9 +135,8 @@ public class BookService {
         bookDTO.setTitle(book.getTitle());
         bookDTO.setAuthor(book.getAuthor());
         bookDTO.setBorrowCount(book.getBorrowCount());
-        bookDTO.setBorrowedByUserId(book.getBorrowedByUserId());
         bookDTO.setIsAvailable(book.getIsAvailable());
-        bookDTO.setLibraryUser(book.getLibraryUser());
+        bookDTO.setLibraryUserDTO(book.getLibraryUser());
         return bookDTO;
     }
 
@@ -121,9 +146,8 @@ public class BookService {
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
         book.setBorrowCount(bookDTO.getBorrowCount());
-        book.setBorrowedByUserId(bookDTO.getBorrowedByUserId());
         book.setIsAvailable(bookDTO.getIsAvailable());
-        book.setLibraryUser(bookDTO.getLibraryUser());
+        book.setLibraryUser(bookDTO.getLibraryUserDTO());
         return book;
     }
 
@@ -132,7 +156,7 @@ public class BookService {
     }
 
     public List<BookDTO> getBooksByUserId(Integer id) {
-        List<Book> books = bookRepository.findAllByBorrowedByUserId(id);
+        List<Book> books = bookRepository.findAllByLibraryUser_Id(id);
 
         List<BookDTO> borrowedBooks = new ArrayList<>();
         for (Book book : books) {
@@ -154,7 +178,7 @@ public class BookService {
 
 
     public List<BookDTO> getAllByTitle(String title) {
-        List<BookDTO> books = bookRepository.findByAuthorContainingIgnoreCase(title)
+        List<BookDTO> books = bookRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
                 .map(this::convertBookToBookDTO)
                 .collect(Collectors.toList());

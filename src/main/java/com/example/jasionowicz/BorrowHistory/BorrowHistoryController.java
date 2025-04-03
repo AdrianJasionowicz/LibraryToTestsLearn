@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class BorrowHistoryController {
 
     private final BorrowHistoryService borrowHistoryService;
@@ -16,7 +16,6 @@ public class BorrowHistoryController {
     }
 
     @GetMapping("/getBorrowHistory/{id}")
-    @ResponseBody
     public List<BorrowHistoryDTO> getBorrowHistory(@PathVariable int id) {
         return borrowHistoryService.getAllLibraryUserBorrowedHistory(id);
 

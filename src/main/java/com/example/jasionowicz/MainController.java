@@ -2,6 +2,7 @@ package com.example.jasionowicz;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -63,5 +64,12 @@ public class MainController {
 
         return "borrow-history";
     }
+
+    @GetMapping("/admin-panel")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public String adminPanel() {
+        return "admin-panel";
+    }
+
 
 }

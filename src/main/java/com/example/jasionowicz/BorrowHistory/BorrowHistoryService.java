@@ -7,6 +7,7 @@ import com.example.jasionowicz.User.LibraryUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -61,33 +62,36 @@ public class BorrowHistoryService {
 
     public void shouldChargeUser(BorrowHistory borrowHistory) {
         int userId = borrowHistory.getUser().getId();
-        int ammount = checkIfBorrowedBookWasHeldToLong(borrowHistory);
-        if (ammount < 0) {
+        BigDecimal ammount = checkIfBorrowedBookWasHeldTooLong(borrowHistory);
+        if ( ammount.intValue() < 0) {
            LibraryUserDTO libraryUserDTO =  libraryUserService.convertLibraryUserToLibraryUserDTO(libraryUserService.getLibraryUser(userId));
-            libraryUserDTO.setAccountBalance(ammount);
+            libraryUserDTO.setAccountBalance(libraryUserDTO.getAccountBalance() - ammount.intValue());
             libraryUserService.save(libraryUserService.convertLibraryUserDTOToLibraryUser(libraryUserDTO));
         }
     }
 
 
-    public int checkIfBorrowedBookWasHeldToLong(BorrowHistory borrowHistory) {
-       LocalDate borrowDate = borrowHistory.getBorrowDate();
-      LocalDate returnDate =  borrowHistory.getReturnDate();
-      if (borrowDate == null || returnDate == null) {
-          throw new IllegalArgumentException("Borrow Date and Return Date are mandatory");
-      }
+    public BigDecimal checkIfBorrowedBookWasHeldTooLong(BorrowHistory borrowHistory) {
+        LocalDate borrowDate = borrowHistory.getBorrowDate();
+        LocalDate returnDate = borrowHistory.getReturnDate();
 
-      int maxBorrowDays = 28;
-      int penaltyPerDay = -2;
+        if (borrowDate == null || returnDate == null) {
+            throw new IllegalArgumentException("Borrow Date and Return Date are mandatory");
+        }
+
+        int maxBorrowDays = 28;
+        BigDecimal penaltyPerDay = new BigDecimal("10");
         long daysBetween = ChronoUnit.DAYS.between(borrowDate, returnDate);
 
-        if ( daysBetween > maxBorrowDays ) {
+        if (daysBetween > maxBorrowDays) {
             long overDueDays = daysBetween - maxBorrowDays;
-            return (int) overDueDays * penaltyPerDay;
+            return penaltyPerDay.multiply(BigDecimal.valueOf(overDueDays));
         }
-        return 0;
+
+        return BigDecimal.ZERO;
     }
-    
+
+
 
     public List<BorrowHistoryDTO> getAllLibraryUserBorrowedHistory(int userId) {
         List<BorrowHistory> borrowedHistory = borrowHistoryRepository.findAllByUserId(userId);
@@ -104,8 +108,8 @@ public class BorrowHistoryService {
         borrowHistoryDTO.setId(borrowHistory.getId());
         borrowHistoryDTO.setReturnDate(borrowHistory.getReturnDate());
         borrowHistoryDTO.setBorrowDate(borrowHistory.getBorrowDate());
-        borrowHistoryDTO.setUser(borrowHistory.getUser());
-        borrowHistoryDTO.setBook(borrowHistory.getBook());
+        borrowHistoryDTO.setUser(borrowHistoryDTO.getUser());
+        borrowHistoryDTO.setBook(borrowHistoryDTO.getBook());
         return borrowHistoryDTO;
     }
 

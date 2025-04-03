@@ -46,7 +46,6 @@ public class BooksCartService {
             booksCart.setLibraryUser(libraryUser);
             booksCart.setBooks(new ArrayList<>());
             BooksCart savedCart = booksCartRepository.save(booksCart);
-            System.out.println("Nowy koszyk utworzony: " + savedCart);
             return savedCart;
         });
     }
@@ -58,18 +57,15 @@ public class BooksCartService {
         LoginUserDTO loginUser = loginUserService.getLoginUserIdByUsername(username);
         LibraryUser libraryUser = loginUser.getLibraryUser();
 
-        BooksCart booksCart = getCartByUser(libraryUser);
-        if (booksCart == null) {
-            booksCart = new BooksCart();
-            booksCart.setLibraryUser(libraryUser);
-            booksCart.setBooks(new ArrayList<>());
-            booksCart = booksCartRepository.save(booksCart);
+        if (libraryUser == null) {
+            throw new RuntimeException("libraryUser == null dla użytkownika " + username);
         }
+        BooksCart booksCart = getCartByUser(libraryUser);
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono książki"));
 
-        if (!book.isAvailable()) {
+        if (!book.getIsAvailable()) {
             throw new RuntimeException("Książka jest już wypożyczona!");
         }
 
@@ -78,6 +74,7 @@ public class BooksCartService {
             booksCartRepository.save(booksCart);
         }
     }
+
 
     public void removeFromCart(String username, Integer bookId) {
         LibraryUser user = loginUserService.getLoginUserIdByUsername(username).getLibraryUser();
@@ -99,7 +96,7 @@ public class BooksCartService {
         BooksCart cart = booksCartRepository.findByLibraryUser(user).orElse(new BooksCart(null, user, new ArrayList<>()));
 
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Książka nie istnieje!"));
-        if (!book.isAvailable()) throw new RuntimeException("Książka jest wypożyczona!");
+        if (!book.getIsAvailable()) throw new RuntimeException("Książka jest wypożyczona!");
 
         cart.getBooks().add(book);
         booksCartRepository.save(cart);
@@ -108,18 +105,36 @@ public class BooksCartService {
     @Transactional
     public void placeOrder(UserDetails userDetails) {
         String username = userDetails.getUsername();
-        LibraryUser user = loginUserService.getLoginUserIdByUsername(username).getLibraryUser();
-        BooksCart bookscart = booksCartRepository.findByLibraryUser(user).get();
-        List<Book> books = bookscart.getBooks();
-        for (Book book : books) {
-            borrowHistoryService.recordNewBorrow(book.getId(), user.getId());
-            bookService.borrowBook(book.getId(),userDetails);
+        LoginUserDTO loginUserDTO = loginUserService.getLoginUserIdByUsername(username);
+        LibraryUser user = loginUserDTO.getLibraryUser();
+
+        if (user == null) {
+            throw new RuntimeException("Brak powiązanego LibraryUser dla użytkownika: " + username);
         }
-        booksCartRepository.findByLibraryUser(user).ifPresent(cart -> {
-            cart.getBooks().clear();
-            booksCartRepository.save(cart);
-            booksCartRepository.delete(cart);
-        });
+
+        BooksCart booksCart = booksCartRepository.findByLibraryUser(user)
+                .orElseThrow(() -> new RuntimeException("Brak koszyka dla użytkownika: " + username));
+
+        List<Book> books = new ArrayList<>(booksCart.getBooks());
+
+        if (books.isEmpty()) {
+            throw new RuntimeException("Koszyk jest pusty!");
+        }
+
+        for (Book book : books) {
+            if (!book.getIsAvailable()) {
+                throw new RuntimeException("Książka '" + book.getTitle() + "' jest już wypożyczona!");
+            }
+
+            borrowHistoryService.recordNewBorrow(book.getId(), user.getId());
+            bookService.borrowBook(book.getId(), userDetails);
+
+            book.getCarts().remove(booksCart);
+        }
+
+        booksCart.getBooks().clear();
+        booksCartRepository.save(booksCart);
     }
+
 
 }

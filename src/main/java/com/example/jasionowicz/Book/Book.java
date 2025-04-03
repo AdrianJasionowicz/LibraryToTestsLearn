@@ -28,8 +28,6 @@ public class Book {
     private String title;
     private String author;
     private Boolean isAvailable;
-    @Column(name = "borrowed_by_user_id")
-    private Integer borrowedByUserId;
     private int borrowCount = 0;
     @ManyToOne
     @JsonIgnore
@@ -37,16 +35,5 @@ public class Book {
     @ManyToMany(mappedBy = "books")
     @JsonIgnore
     private List<BooksCart> carts = new ArrayList<>();
-
-
-
-
-    public boolean isAvailable() {
-
-        if ( isAvailable == null ) {
-            return true;
-        }
-        return isAvailable;
-    }
 
 }

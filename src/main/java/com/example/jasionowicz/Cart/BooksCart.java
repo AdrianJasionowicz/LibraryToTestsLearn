@@ -24,7 +24,7 @@ public class BooksCart {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private LibraryUser libraryUser;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "cart_books",
             joinColumns = @JoinColumn(name = "cart_id"),
